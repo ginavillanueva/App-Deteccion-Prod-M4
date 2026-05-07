@@ -282,3 +282,20 @@ Esto provoca retrasos en la toma de decisiones, errores operativos, duplicidad d
 | Versión | Fecha | Autor | Cambio |
 |---------|-------|-------|--------|
 | v0.1 | 07/05/2026 | Gina Fabiana Villanueva Viscarra | Versión inicial |
+
+
+## Checklist mínimo de entrega
+
+- [x] Resumen ejecutivo de ½ página con problema, propuesta, valor y métricas.
+- [x] Problema de negocio con evidencia cuantitativa.
+- [x] 1–2 personas / usuarios objetivo caracterizadas (JTBD, dolores, ganancias).
+- [x] Propuesta de valor explícita (formato VPC).
+- [x] Panorama competitivo resumen con ≥ 3 alternativas (incluyendo do-nothing).
+- [x] Business Model Canvas con los 9 bloques poblados.
+- [x] Métricas clave de éxito: ≥ 1 North Star + KPIs de apoyo.
+- [x] Objetivos de negocio SMART.
+- [x] Matriz RACI completa.
+- [x] ≥ 8 requerimientos de negocio priorizados (MoSCoW).
+- [x] Reglas, restricciones, supuestos y dependencias explícitos.
+- [x] Business case cuantitativo resumido.
+- [x] Trazabilidad a MRD/PRD iniciada.
