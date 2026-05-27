@@ -1,0 +1,162 @@
+[
+  {
+    "case_id": "CASE-0001",
+    "score": 87,
+    "forced_high_reasons": "vencimiento <=45 días sin acción comercial",
+    "expected_risk": "ALTO",
+    "ai_risk": "ALTO",
+    "ai_explanation": "Score=87; nivel=ALTO; factores: vencimiento=33d, valor=18637.78, acción=NONE, evidencia=incompleta, cambio_precio=no solicitado, aprobación=no."
+  },
+  {
+    "case_id": "CASE-0002",
+    "score": 72,
+    "forced_high_reasons": "",
+    "expected_risk": "ALTO",
+    "ai_risk": "ALTO",
+    "ai_explanation": "Score=72; nivel=ALTO; factores: vencimiento=66d, valor=14631.3, acción=NONE, evidencia=incompleta, cambio_precio=solicitado, aprobación=sí."
+  },
+  {
+    "case_id": "CASE-0003",
+    "score": 67,
+    "forced_high_reasons": "",
+    "expected_risk": "ALTO",
+    "ai_risk": "ALTO",
+    "ai_explanation": "Score=67; nivel=ALTO; factores: vencimiento=82d, valor=10749.6, acción=NONE, evidencia=completa, cambio_precio=solicitado, aprobación=sí."
+  },
+  {
+    "case_id": "CASE-0004",
+    "score": 42,
+    "forced_high_reasons": "",
+    "expected_risk": "MEDIO",
+    "ai_risk": "MEDIO",
+    "ai_explanation": "Score=42; nivel=MEDIO; factores: vencimiento=90d, valor=24506.96, acción=APPLIED, evidencia=completa, cambio_precio=no solicitado, aprobación=no."
+  },
+  {
+    "case_id": "CASE-0005",
+    "score": 83,
+    "forced_high_reasons": "vencimiento <=45 días sin acción comercial",
+    "expected_risk": "ALTO",
+    "ai_risk": "ALTO",
+    "ai_explanation": "Score=83; nivel=ALTO; factores: vencimiento=16d, valor=39233.85, acción=NONE, evidencia=completa, cambio_precio=no solicitado, aprobación=no."
+  },
+  {
+    "case_id": "CASE-0006",
+    "score": 88,
+    "forced_high_reasons": "cambio de precio no aprobado con impacto >=1000",
+    "expected_risk": "ALTO",
+    "ai_risk": "ALTO",
+    "ai_explanation": "Score=88; nivel=ALTO; factores: vencimiento=14d, valor=26512.72, acción=APPLIED, evidencia=completa, cambio_precio=solicitado, aprobación=no."
+  },
+  {
+    "case_id": "CASE-0007",
+    "score": 57,
+    "forced_high_reasons": "",
+    "expected_risk": "MEDIO",
+    "ai_risk": "MEDIO",
+    "ai_explanation": "Score=57; nivel=MEDIO; factores: vencimiento=39d, valor=28096.31, acción=APPLIED, evidencia=completa, cambio_precio=no solicitado, aprobación=no."
+  },
+  {
+    "case_id": "CASE-0008",
+    "score": 62,
+    "forced_high_reasons": "",
+    "expected_risk": "ALTO",
+    "ai_risk": "ALTO",
+    "ai_explanation": "Score=62; nivel=ALTO; factores: vencimiento=35d, valor=9282.64, acción=APPLIED, evidencia=completa, cambio_precio=solicitado, aprobación=sí."
+  },
+  {
+    "case_id": "CASE-0009",
+    "score": 83,
+    "forced_high_reasons": "",
+    "expected_risk": "ALTO",
+    "ai_risk": "ALTO",
+    "ai_explanation": "Score=83; nivel=ALTO; factores: vencimiento=18d, valor=36115.29, acción=PENDING_APPROVAL, evidencia=completa, cambio_precio=solicitado, aprobación=sí."
+  },
+  {
+    "case_id": "CASE-0010",
+    "score": 64,
+    "forced_high_reasons": "",
+    "expected_risk": "ALTO",
+    "ai_risk": "ALTO",
+    "ai_explanation": "Score=64; nivel=ALTO; factores: vencimiento=50d, valor=20035.12, acción=PENDING_APPROVAL, evidencia=completa, cambio_precio=no solicitado, aprobación=no."
+  },
+  {
+    "case_id": "CASE-0011",
+    "score": 73,
+    "forced_high_reasons": "vencimiento <=30 días con evidencia incompleta",
+    "expected_risk": "ALTO",
+    "ai_risk": "ALTO",
+    "ai_explanation": "Score=73; nivel=ALTO; factores: vencimiento=29d, valor=5277.44, acción=APPLIED, evidencia=incompleta, cambio_precio=solicitado, aprobación=sí."
+  },
+  {
+    "case_id": "CASE-0012",
+    "score": 99,
+    "forced_high_reasons": "cambio de precio no aprobado con impacto >=1000",
+    "expected_risk": "ALTO",
+    "ai_risk": "ALTO",
+    "ai_explanation": "Score=99; nivel=ALTO; factores: vencimiento=29d, valor=21389.68, acción=PENDING_APPROVAL, evidencia=completa, cambio_precio=solicitado, aprobación=no."
+  },
+  {
+    "case_id": "CASE-0013",
+    "score": 45,
+    "forced_high_reasons": "",
+    "expected_risk": "MEDIO",
+    "ai_risk": "MEDIO",
+    "ai_explanation": "Score=45; nivel=MEDIO; factores: vencimiento=70d, valor=2589.6, acción=PENDING_APPROVAL, evidencia=incompleta, cambio_precio=no solicitado, aprobación=no."
+  },
+  {
+    "case_id": "CASE-0014",
+    "score": 81,
+    "forced_high_reasons": "cambio de precio no aprobado con impacto >=1000",
+    "expected_risk": "ALTO",
+    "ai_risk": "ALTO",
+    "ai_explanation": "Score=81; nivel=ALTO; factores: vencimiento=76d, valor=3952.95, acción=NONE, evidencia=incompleta, cambio_precio=solicitado, aprobación=no."
+  },
+  {
+    "case_id": "CASE-0015",
+    "score": 76,
+    "forced_high_reasons": "cambio de precio no aprobado con impacto >=1000",
+    "expected_risk": "ALTO",
+    "ai_risk": "ALTO",
+    "ai_explanation": "Score=76; nivel=ALTO; factores: vencimiento=28d, valor=13963.38, acción=APPLIED, evidencia=completa, cambio_precio=solicitado, aprobación=no."
+  },
+  {
+    "case_id": "CASE-0016",
+    "score": 85,
+    "forced_high_reasons": "vencimiento <=45 días sin acción comercial",
+    "expected_risk": "ALTO",
+    "ai_risk": "ALTO",
+    "ai_explanation": "Score=85; nivel=ALTO; factores: vencimiento=3d, valor=9487.02, acción=NONE, evidencia=completa, cambio_precio=no solicitado, aprobación=no."
+  },
+  {
+    "case_id": "CASE-0017",
+    "score": 55,
+    "forced_high_reasons": "",
+    "expected_risk": "MEDIO",
+    "ai_risk": "MEDIO",
+    "ai_explanation": "Score=55; nivel=MEDIO; factores: vencimiento=120d, valor=33715.2, acción=NONE, evidencia=completa, cambio_precio=no solicitado, aprobación=no."
+  },
+  {
+    "case_id": "CASE-0018",
+    "score": 100,
+    "forced_high_reasons": "vencimiento <=45 días sin acción comercial; vencimiento <=30 días con evidencia incompleta",
+    "expected_risk": "ALTO",
+    "ai_risk": "ALTO",
+    "ai_explanation": "Score=100; nivel=ALTO; factores: vencimiento=13d, valor=8701.49, acción=NONE, evidencia=incompleta, cambio_precio=no solicitado, aprobación=no."
+  },
+  {
+    "case_id": "CASE-0019",
+    "score": 83,
+    "forced_high_reasons": "cambio de precio no aprobado con impacto >=1000",
+    "expected_risk": "ALTO",
+    "ai_risk": "ALTO",
+    "ai_explanation": "Score=83; nivel=ALTO; factores: vencimiento=65d, valor=14699.81, acción=PENDING_APPROVAL, evidencia=completa, cambio_precio=solicitado, aprobación=no."
+  },
+  {
+    "case_id": "CASE-0020",
+    "score": 64,
+    "forced_high_reasons": "",
+    "expected_risk": "ALTO",
+    "ai_risk": "ALTO",
+    "ai_explanation": "Score=64; nivel=ALTO; factores: vencimiento=57d, valor=27248.68, acción=APPLIED, evidencia=incompleta, cambio_precio=solicitado, aprobación=sí."
+  }
+]

@@ -1,0 +1,27 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, Arial, sans-serif", "primaryColor": "#E8F1FF", "primaryTextColor": "#0B1F3A", "primaryBorderColor": "#2F6FED", "lineColor": "#5B6B7A", "secondaryColor": "#F6F8FA", "tertiaryColor": "#FFF7E6", "clusterBkg": "#F8FAFC", "clusterBorder": "#CBD5E1"}, "flowchart": {"curve": "basis", "htmlLabels": true, "nodeSpacing": 45, "rankSpacing": 55}, "sequence": {"mirrorActors": false, "showSequenceNumbers": true}}}%%
+
+sequenceDiagram
+  autonumber
+  actor M as Mercaderista
+  participant UI as App móvil/web
+  participant API as API Backend
+  participant UC as Caso de uso: RegistrarProducto
+  participant DB as PostgreSQL/RDS
+  participant S3 as S3 Evidencia
+  participant Dash as Dashboard inmediato
+  participant Outbox as Outbox
+  participant Sup as Supervisor
+
+  M->>UI: Captura producto, lote, vencimiento, cantidad, precio actual, foto
+  UI->>API: POST /productos-reportados
+  API->>UC: Validar contrato + rol Mercaderista
+  UC->>UC: Aplicar reglas mínimas: datos obligatorios, vencimiento, evidencia
+  UC->>S3: Guardar evidencia visual
+  S3-->>UC: URL/hash de evidencia
+  UC->>DB: Transacción: guardar ProductoReportado + estado PENDIENTE_VALIDACION
+  UC->>Dash: Actualizar KPIs críticos del día desde transacción
+  UC->>Outbox: Insertar ProductReported.v1 en la misma transacción
+  DB-->>UC: Commit exitoso
+  UC-->>API: Resultado + ID de caso
+  API-->>UI: Confirmación y estado
+  Outbox-->>Sup: Notificación/cola para revisión táctica

@@ -1,0 +1,16 @@
+sequenceDiagram
+  participant Sup as Supervisor/Vendedor
+  participant UI as App Detección Prod
+  participant IA as IA Risk Classifier
+  participant GR as Guardrails
+  participant Audit as Auditoría
+  Sup->>UI: Solicita clasificación de caso
+  UI->>IA: Envía datos estructurados
+  IA->>IA: Calcula score 0-100
+  IA->>IA: Evalúa reglas críticas
+  IA->>GR: Valida acción permitida
+  GR-->>IA: Solo clasificar/explicar
+  IA->>Audit: Registra score, factores y salida
+  IA-->>UI: BAJO/MEDIO/ALTO + explicación
+  UI-->>Sup: Muestra prioridad y recomendación
+  Note over Sup,UI: Cambio de precio, descuento, retiro o cierre requiere humano autorizado.

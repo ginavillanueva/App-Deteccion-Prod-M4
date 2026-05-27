@@ -1,0 +1,32 @@
+---
+title: POC-01 - Trazabilidad documental y arquitectónica
+---
+flowchart TB
+  BRD[BRD
+Reducir merma y medir impacto financiero] --> PRD[PRD
+Registro + precio + dashboard]
+  MRD[MRD
+Mercado requiere trazabilidad y eficiencia] --> PRD
+  PRD --> FSD[FSD
+UC registro producto
+UC cambio precio
+UC dashboard]
+  FSD --> DTI[DTI
+Arquitectura hexagonal
+Dashboard inmediato
+Outbox]
+  DTI --> ADR1[ADR-0001
+Monolito modular]
+  DTI --> ADR2[ADR-0002
+Core hexagonal]
+  DTI --> ADR3[ADR-0003
+Outbox + dashboard inmediato]
+  DTI --> ADR5[ADR-0005
+AWS + observabilidad]
+  ADR3 --> POC[POC-01
+Validación ejecutada]
+  POC --> EV[Evidencia
+metrics.json
+latencies.csv
+sqlite
+charts]

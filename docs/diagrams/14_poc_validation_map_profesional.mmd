@@ -1,0 +1,40 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, Arial, sans-serif", "primaryColor": "#E8F1FF", "primaryTextColor": "#0B1F3A", "primaryBorderColor": "#2F6FED", "lineColor": "#5B6B7A", "secondaryColor": "#F6F8FA", "tertiaryColor": "#FFF7E6", "clusterBkg": "#F8FAFC", "clusterBorder": "#CBD5E1"}, "flowchart": {"curve": "basis", "htmlLabels": true, "nodeSpacing": 45, "rankSpacing": 55}, "sequence": {"mirrorActors": false, "showSequenceNumbers": true}}}%%
+
+flowchart LR
+  title["POCs y validación — riesgos arquitectónicos convertidos en evidencia"]
+
+  subgraph Risks["Riesgos críticos"]
+    R1["R1: registro lento en campo"]
+    R2["R2: dashboard gerencial desactualizado"]
+    R3["R3: pérdida/duplicidad de eventos"]
+    R4["R4: IA produce recomendaciones inseguras"]
+    R5["R5: cambios de precio sin trazabilidad"]
+  end
+
+  subgraph POCs["POCs propuestas"]
+    P1["POC-01\nlatencia registro + dashboard inmediato"]
+    P2["POC-02\noutbox + idempotencia + DLQ"]
+    P3["POC-03\nIA con guardrails y human-in-the-loop"]
+    P4["POC-04\nauditoría de cambio de precio"]
+  end
+
+  subgraph Metrics["Métricas de aceptación"]
+    M1["p95 registro <= 500 ms"]
+    M2["freshness dashboard <= 5 s\npara KPIs críticos"]
+    M3["0 eventos perdidos\nidempotencia verificada"]
+    M4["0 acciones irreversibles por IA"]
+    M5["100% precio con antes/después/responsable"]
+  end
+
+  R1 --> P1 --> M1
+  R2 --> P1 --> M2
+  R3 --> P2 --> M3
+  R4 --> P3 --> M4
+  R5 --> P4 --> M5
+
+  classDef risk fill:#FEE2E2,stroke:#DC2626,color:#450A0A;
+  classDef poc fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#052E16;
+  classDef metric fill:#E8F1FF,stroke:#2563EB,color:#0B1F3A;
+  class R1,R2,R3,R4,R5 risk;
+  class P1,P2,P3,P4 poc;
+  class M1,M2,M3,M4,M5 metric;

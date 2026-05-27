@@ -1,0 +1,8 @@
+flowchart TD
+  BRD[BRD: reducir merma y trazabilidad] --> PRD[PRD: priorización y alertas]
+  PRD --> FSD[FSD: clasificación de riesgo]
+  FSD --> ADR4[ADR-0004: IA con guardrails]
+  ADR4 --> POC2[POC-02: scoring + human-in-the-loop]
+  POC2 --> DTI[DTI: evidencia arquitectura IA]
+  POC2 --> PROMPTS[Prompts versionados]
+  POC2 --> OBS[Observabilidad y auditoría]

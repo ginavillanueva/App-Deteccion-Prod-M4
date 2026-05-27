@@ -1,0 +1,57 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, Arial, sans-serif", "primaryColor": "#E8F1FF", "primaryTextColor": "#0B1F3A", "primaryBorderColor": "#2F6FED", "lineColor": "#5B6B7A", "secondaryColor": "#F6F8FA", "tertiaryColor": "#FFF7E6", "clusterBkg": "#F8FAFC", "clusterBorder": "#CBD5E1"}, "flowchart": {"curve": "basis", "htmlLabels": true, "nodeSpacing": 45, "rankSpacing": 55}, "sequence": {"mirrorActors": false, "showSequenceNumbers": true}}}%%
+
+flowchart TB
+  title["Deployment AWS — Evolución cloud segura y observable"]
+
+  subgraph Internet["Acceso usuarios"]
+    U1["Usuarios móviles/web"]
+    DNS["Route 53"]
+    CDN["CloudFront + WAF"]
+  end
+
+  subgraph VPC["VPC privada"]
+    ALB["Application Load Balancer"]
+    ECS["ECS Fargate / App Backend\nmonolito modular"]
+    RDS[("Amazon RDS PostgreSQL\ntransaccional + dashboard inmediato")]
+    S3["S3\nevidencias visuales"]
+    SQS["SQS / EventBridge\neventos outbox"]
+    Worker["Worker Fargate\nalertas, IA, auditoría"]
+  end
+
+  subgraph Security["Seguridad"]
+    IAM["IAM Roles"]
+    Secrets["Secrets Manager"]
+    KMS["KMS Encryption"]
+  end
+
+  subgraph Observability["Observabilidad"]
+    CW["CloudWatch Logs/Metrics"]
+    Alarms["CloudWatch Alarms\nlatencia, errores, outbox lag, dashboard freshness"]
+    XRay["X-Ray / tracing futuro"]
+  end
+
+  U1 --> DNS --> CDN --> ALB --> ECS
+  ECS --> RDS
+  ECS --> S3
+  ECS --> SQS
+  SQS --> Worker
+  Worker --> RDS
+  Worker --> S3
+  ECS --> IAM
+  ECS --> Secrets
+  RDS --> KMS
+  S3 --> KMS
+  ECS --> CW
+  Worker --> CW
+  RDS --> CW
+  CW --> Alarms
+  ECS --> XRay
+
+  classDef net fill:#E8F1FF,stroke:#2563EB,color:#0B1F3A;
+  classDef compute fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#052E16;
+  classDef sec fill:#FEE2E2,stroke:#DC2626,color:#450A0A;
+  classDef obs fill:#FFF7E6,stroke:#F59E0B,color:#3B2500;
+  class U1,DNS,CDN,ALB net;
+  class ECS,RDS,S3,SQS,Worker compute;
+  class IAM,Secrets,KMS sec;
+  class CW,Alarms,XRay obs;

@@ -1,0 +1,31 @@
+stateDiagram-v2
+  [*] --> Reportado: Mercaderista registra producto
+  Reportado --> PendienteValidacion: datos mínimos completos
+  Reportado --> RequiereCorreccion: evidencia incompleta / datos ambiguos
+  RequiereCorreccion --> Reportado: mercaderista corrige
+
+  PendienteValidacion --> Validado: supervisor valida
+  PendienteValidacion --> Rechazado: duplicado / falso positivo
+
+  Validado --> Critico: vencimiento cercano / alto valor en riesgo
+  Validado --> EnObservacion: riesgo medio / baja cantidad
+  Validado --> AccionRequerida: requiere descuento, bandeo, retiro o precio
+
+  Critico --> AccionRequerida: prioridad alta
+  EnObservacion --> AccionRequerida: cambia condición / alerta automática
+
+  AccionRequerida --> PrecioPendienteAprobacion: cambio de precio requerido
+  PrecioPendienteAprobacion --> PrecioAprobado: supervisor/vendedor autorizado
+  PrecioPendienteAprobacion --> AccionRequerida: rechazado o requiere ajuste
+
+  PrecioAprobado --> AccionAplicada: se aplica precio/acción comercial
+  AccionRequerida --> AccionAplicada: acción sin cambio de precio
+
+  AccionAplicada --> CerradoVendido: producto vendido / rotado
+  AccionAplicada --> CerradoRetirado: producto retirado / devolución
+  AccionAplicada --> EscaladoGerencia: impacto económico alto o excepción
+  EscaladoGerencia --> AccionAplicada: decisión ejecutiva
+
+  Rechazado --> [*]
+  CerradoVendido --> [*]
+  CerradoRetirado --> [*]

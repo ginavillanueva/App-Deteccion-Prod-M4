@@ -1,0 +1,29 @@
+flowchart LR
+  subgraph Input[Datos de caso]
+    A[Vencimiento]:::data
+    B[Cantidad]:::data
+    C[Precio anterior/nuevo]:::data
+    D[Acción comercial]:::data
+    E[Evidencia]:::data
+  end
+  Input --> S[Scoring 0-100]:::core
+  S --> R{Reglas críticas?}:::decision
+  R -->|Sí| H[ALTO]:::high
+  R -->|No| C1{Umbral}:::decision
+  C1 -->|0-29| L[BAJO]:::low
+  C1 -->|30-59| M[MEDIO]:::medium
+  C1 -->|>=60| H
+  L --> G[Guardrails]:::guard
+  M --> G
+  H --> G
+  G --> O[Salida: clasificar + explicar + recomendar revisión]:::output
+  G --> X[Acciones prohibidas bloqueadas]:::blocked
+  classDef data fill:#e3f2fd,stroke:#1565c0,color:#0d47a1;
+  classDef core fill:#fff3e0,stroke:#ef6c00,color:#e65100;
+  classDef decision fill:#ede7f6,stroke:#5e35b1,color:#311b92;
+  classDef low fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20;
+  classDef medium fill:#fffde7,stroke:#f9a825,color:#5d4037;
+  classDef high fill:#ffebee,stroke:#c62828,color:#b71c1c;
+  classDef guard fill:#f3e5f5,stroke:#7b1fa2,color:#4a148c;
+  classDef output fill:#e0f2f1,stroke:#00796b,color:#004d40;
+  classDef blocked fill:#ffebee,stroke:#d32f2f,color:#b71c1c;

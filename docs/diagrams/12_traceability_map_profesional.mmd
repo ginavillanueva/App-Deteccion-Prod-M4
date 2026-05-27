@@ -1,0 +1,39 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, Arial, sans-serif", "primaryColor": "#E8F1FF", "primaryTextColor": "#0B1F3A", "primaryBorderColor": "#2F6FED", "lineColor": "#5B6B7A", "secondaryColor": "#F6F8FA", "tertiaryColor": "#FFF7E6", "clusterBkg": "#F8FAFC", "clusterBorder": "#CBD5E1"}, "flowchart": {"curve": "basis", "htmlLabels": true, "nodeSpacing": 45, "rankSpacing": 55}, "sequence": {"mirrorActors": false, "showSequenceNumbers": true}}}%%
+
+flowchart LR
+  title["Mapa de trazabilidad — de necesidad de negocio a arquitectura y evidencia"]
+
+  BRD["BRD\nproblema de negocio, KPIs, RACI, valor"] --> MRD["MRD\nmercado, segmentos, JTBD, competencia"]
+  MRD --> PRD["PRD\nobjetivos, épicas, historias, NFRs"]
+  PRD --> FSD["FSD\ncasos de uso, reglas, Gherkin, datos"]
+  FSD --> ADR1["ADR-0001\nmonolito modular evolutivo"]
+  FSD --> ADR2["ADR-0002\nhexagonal core"]
+  FSD --> ADR3["ADR-0003\nevent-driven + outbox + dashboard inmediato"]
+  FSD --> ADR4["ADR-0004\nIA con guardrails"]
+  FSD --> ADR5["ADR-0005\nAWS + observabilidad + seguridad"]
+  ADR1 --> DTI["DTI\ncontrato técnico rector"]
+  ADR2 --> DTI
+  ADR3 --> DTI
+  ADR4 --> DTI
+  ADR5 --> DTI
+  DTI --> DIAG["Diagramas .mmd\nC4, dominio, flujos, AWS"]
+  DTI --> POC["POCs\nrendimiento, outbox, IA, precio"]
+  DTI --> AG["AGENTS.md\nreglas para agentes IA"]
+  DTI --> PM["PROMPT_MAPPING.md\ntrazabilidad prompts → artefactos"]
+  DTI --> ROAD["roadmap.md\nevolución técnica/producto"]
+
+  KPI["KPI transversal precio\nprecio anterior/nuevo, variación, valor intervenido, diferencia aprobado/aplicado"]
+  KPI -. aparece en .-> BRD
+  KPI -. aparece en .-> PRD
+  KPI -. aparece en .-> FSD
+  KPI -. aparece en .-> ADR3
+  KPI -. aparece en .-> ADR5
+  KPI -. aparece en .-> DTI
+  KPI -. valida .-> POC
+
+  classDef doc fill:#E8F1FF,stroke:#2563EB,color:#0B1F3A;
+  classDef arch fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#052E16;
+  classDef kpi fill:#FFF7E6,stroke:#F59E0B,color:#3B2500;
+  class BRD,MRD,PRD,FSD,DIAG,POC,AG,PM,ROAD doc;
+  class ADR1,ADR2,ADR3,ADR4,ADR5,DTI arch;
+  class KPI kpi;

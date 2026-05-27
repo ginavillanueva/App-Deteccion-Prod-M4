@@ -1,0 +1,86 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, Arial, sans-serif", "primaryColor": "#E8F1FF", "primaryTextColor": "#0B1F3A", "primaryBorderColor": "#2F6FED", "lineColor": "#5B6B7A", "secondaryColor": "#F6F8FA", "tertiaryColor": "#FFF7E6", "clusterBkg": "#F8FAFC", "clusterBorder": "#CBD5E1"}, "flowchart": {"curve": "basis", "htmlLabels": true, "nodeSpacing": 45, "rankSpacing": 55}, "sequence": {"mirrorActors": false, "showSequenceNumbers": true}}}%%
+
+flowchart TB
+  title["C4 Nivel 3 — Componentes internos del Core"]
+
+  subgraph API["Capa de entrada / inbound adapters"]
+    REST["REST Controllers\nvalidan contrato HTTP"]
+    AUTH["Auth/RBAC Filter\nrol, permiso, alcance"]
+  end
+
+  subgraph Application["Capa de aplicación / casos de uso"]
+    UC1["RegistrarProductoProximoVencer"]
+    UC2["ValidarReporteProducto"]
+    UC3["RegistrarAccionComercial"]
+    UC4["RegistrarCambioPrecio"]
+    UC5["CalcularKPIsDashboard"]
+    UC6["ClasificarRiesgoIA"]
+  end
+
+  subgraph Domain["Dominio protegido"]
+    AG1["ProductoReportado\nagregado raíz"]
+    AG2["AccionComercial\ndescuento, bandeo, retiro"]
+    AG3["PrecioIntervenido\nprecio anterior/nuevo/aprobado/aplicado"]
+    POL["Políticas de negocio\n3 meses, criticidad, aprobaciones"]
+    EVT["Eventos de dominio\nProductReported, PriceChanged, ActionApplied"]
+  end
+
+  subgraph Ports["Puertos"]
+    RepoPort["ProductoRepositoryPort"]
+    EvidencePort["EvidenceStoragePort"]
+    EventPort["DomainEventPublisherPort"]
+    AIPort["RiskClassifierPort"]
+    AuditPort["AuditLogPort"]
+    DashboardPort["DashboardProjectionPort"]
+  end
+
+  subgraph Outbound["Adaptadores de salida"]
+    DB["PostgreSQL Adapter"]
+    S3["S3 Evidence Adapter"]
+    Outbox["Outbox Adapter"]
+    IA["LLM/IA Adapter"]
+    Audit["Audit Adapter"]
+    Dash["Dashboard Read Model Adapter"]
+  end
+
+  REST --> AUTH --> UC1
+  AUTH --> UC2
+  AUTH --> UC3
+  AUTH --> UC4
+  AUTH --> UC5
+  AUTH --> UC6
+
+  UC1 --> AG1
+  UC2 --> AG1
+  UC3 --> AG2
+  UC4 --> AG3
+  UC5 --> POL
+  UC6 --> POL
+  AG1 --> EVT
+  AG2 --> EVT
+  AG3 --> EVT
+  POL --> EVT
+
+  UC1 --> RepoPort
+  UC1 --> EvidencePort
+  UC2 --> AuditPort
+  UC3 --> EventPort
+  UC4 --> DashboardPort
+  UC4 --> EventPort
+  UC6 --> AIPort
+
+  RepoPort --> DB
+  EvidencePort --> S3
+  EventPort --> Outbox
+  AIPort --> IA
+  AuditPort --> Audit
+  DashboardPort --> Dash
+
+  classDef app fill:#E8F1FF,stroke:#2563EB,color:#0B1F3A;
+  classDef domain fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#052E16;
+  classDef port fill:#FEF3C7,stroke:#D97706,color:#3B2500;
+  classDef adapter fill:#F3E8FF,stroke:#7E22CE,color:#2E1065;
+  class REST,AUTH,UC1,UC2,UC3,UC4,UC5,UC6 app;
+  class AG1,AG2,AG3,POL,EVT domain;
+  class RepoPort,EvidencePort,EventPort,AIPort,AuditPort,DashboardPort port;
+  class DB,S3,Outbox,IA,Audit,Dash adapter;

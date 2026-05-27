@@ -1,0 +1,29 @@
+flowchart TB
+  subgraph Negocio[Dolor de negocio]
+    W[WhatsApp/Excel/fotos dispersas]
+    G[Gerencia sin KPIs inmediatos]
+    P[Cambio de precio sin trazabilidad]
+  end
+  subgraph POC[POC-01]
+    R[Registro producto próximo a vencer]
+    C[Cambio de precio auditado]
+    D[Dashboard inmediato]
+    O[Outbox confiable]
+  end
+  subgraph Evidencia[Evidencia generada]
+    M[metrics.json]
+    S[SQLite]
+    L[latencies.csv]
+    PNG[gráficos PNG]
+  end
+  W --> R
+  G --> D
+  P --> C
+  R --> D
+  C --> D
+  R --> O
+  C --> O
+  D --> M
+  O --> S
+  R --> L
+  M --> PNG

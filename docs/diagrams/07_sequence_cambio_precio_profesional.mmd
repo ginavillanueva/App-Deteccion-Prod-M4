@@ -1,0 +1,32 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, Arial, sans-serif", "primaryColor": "#E8F1FF", "primaryTextColor": "#0B1F3A", "primaryBorderColor": "#2F6FED", "lineColor": "#5B6B7A", "secondaryColor": "#F6F8FA", "tertiaryColor": "#FFF7E6", "clusterBkg": "#F8FAFC", "clusterBorder": "#CBD5E1"}, "flowchart": {"curve": "basis", "htmlLabels": true, "nodeSpacing": 45, "rankSpacing": 55}, "sequence": {"mirrorActors": false, "showSequenceNumbers": true}}}%%
+
+sequenceDiagram
+  autonumber
+  actor V as Vendedor
+  actor S as Supervisor
+  participant UI as App Web
+  participant API as API Backend
+  participant UC as Caso de uso: RegistrarCambioPrecio
+  participant DB as PostgreSQL/RDS
+  participant Dash as Dashboard Gerencial Inmediato
+  participant Outbox as Outbox
+  participant Audit as Auditoría
+  actor G as Gerencia
+
+  V->>UI: Propone cambio de precio por producto próximo a vencer
+  UI->>API: POST /acciones/{id}/cambio-precio
+  API->>UC: Validar permisos, producto, cantidad, motivo y evidencia
+  UC->>DB: Leer precio anterior, precio aprobado vigente y stock/cantidad reportada
+  UC->>UC: Calcular variación %, valor económico intervenido y diferencia aprobado/aplicado
+  alt Cambio requiere aprobación
+    UC->>DB: Guardar cambio como PENDIENTE_APROBACION
+    UC->>Outbox: PriceChangeRequested.v1
+    S->>UI: Revisa evidencia y aprueba/rechaza
+    S->>API: PATCH /cambio-precio/{id}/aprobar
+  end
+  UC->>DB: Transacción: guardar precio aprobado/aplicado + responsable + motivo
+  UC->>Dash: Actualizar KPI precio crítico inmediatamente al commit
+  UC->>Audit: Registrar trazabilidad completa
+  UC->>Outbox: PriceChanged.v1 + CommercialActionApplied.v1
+  API-->>UI: Cambio registrado y auditable
+  G->>Dash: Consulta variación de precio, valor intervenido y margen protegido actualizado

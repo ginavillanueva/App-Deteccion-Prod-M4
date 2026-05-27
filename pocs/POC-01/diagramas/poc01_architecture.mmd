@@ -1,0 +1,63 @@
+%% POC-01 - Arquitectura de prueba: transacción + dashboard inmediato + Outbox
+%% App Detección Prod - release/2.0.0
+flowchart LR
+  %% Leyenda:
+  %% Azul = interfaz / entrada
+  %% Verde = dominio y casos de uso
+  %% Amarillo = datos transaccionales y dashboard inmediato
+  %% Morado = eventos / outbox / procesos derivados
+  %% Rojo = controles de auditoría y errores
+
+  subgraph U["Actores y entrada de datos"]
+    M["Mercaderista\nregistra producto próximo a vencer"]
+    V["Vendedor / Supervisor\nregistra o valida acción comercial"]
+    G["Gerencia\nconsulta dashboard"]
+  end
+
+  subgraph API["Adaptador de entrada"]
+    API1["API / CLI de prueba POC-01\ncasos FSD-UC-001 y FSD-UC-004"]
+  end
+
+  subgraph CORE["Core hexagonal"]
+    UC1["Caso de uso:\nregistrar producto próximo a vencer"]
+    UC2["Caso de uso:\nregistrar cambio de precio auditado"]
+    RULES["Reglas de dominio\n- vencimiento\n- cantidad\n- precio anterior/nuevo\n- aprobación\n- evidencia"]
+  end
+
+  subgraph TX["Transacción fuerte"]
+    DB[("Base transaccional SQLite / simulación RDS\ncasos, precios, acciones, auditoría")]
+    DASH[("Vista dashboard inmediato\nKPIs críticos gerenciales")]
+    OUTBOX[("Tabla Outbox\neventos pendientes")]
+  end
+
+  subgraph ASYNC["Procesamiento derivado"]
+    WORKER["Worker Outbox\npublica eventos"]
+    AUDIT["Auditoría y trazabilidad"]
+    ALERTS["Alertas operativas"]
+    ANALYTICS["Analítica histórica / futura AWS"]
+  end
+
+  M --> API1
+  V --> API1
+  API1 --> UC1
+  API1 --> UC2
+  UC1 --> RULES
+  UC2 --> RULES
+  RULES --> DB
+  RULES --> DASH
+  RULES --> OUTBOX
+  G --> DASH
+  OUTBOX --> WORKER
+  WORKER --> AUDIT
+  WORKER --> ALERTS
+  WORKER --> ANALYTICS
+
+  classDef actor fill:#E3F2FD,stroke:#1565C0,stroke-width:1px,color:#0D47A1;
+  classDef core fill:#E8F5E9,stroke:#2E7D32,stroke-width:1px,color:#1B5E20;
+  classDef data fill:#FFF8E1,stroke:#F9A825,stroke-width:1px,color:#5D4037;
+  classDef async fill:#F3E5F5,stroke:#7B1FA2,stroke-width:1px,color:#4A148C;
+
+  class M,V,G,API1 actor;
+  class UC1,UC2,RULES core;
+  class DB,DASH,OUTBOX data;
+  class WORKER,AUDIT,ALERTS,ANALYTICS async;

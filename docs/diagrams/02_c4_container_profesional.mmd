@@ -1,0 +1,65 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, Arial, sans-serif", "primaryColor": "#E8F1FF", "primaryTextColor": "#0B1F3A", "primaryBorderColor": "#2F6FED", "lineColor": "#5B6B7A", "secondaryColor": "#F6F8FA", "tertiaryColor": "#FFF7E6", "clusterBkg": "#F8FAFC", "clusterBorder": "#CBD5E1"}, "flowchart": {"curve": "basis", "htmlLabels": true, "nodeSpacing": 45, "rankSpacing": 55}, "sequence": {"mirrorActors": false, "showSequenceNumbers": true}}}%%
+
+flowchart TB
+  title["C4 Nivel 2 — Contenedores técnicos y responsabilidades"]
+
+  subgraph Users["Usuarios"]
+    MobileUser["Mercaderista / Vendedor\nMóvil / Web responsive"]
+    SupervisorUser["Supervisor\nWeb operativo"]
+    ManagerUser["Gerencia / Finanzas\nDashboard ejecutivo"]
+  end
+
+  subgraph App["App Detección Prod — Monolito modular evolutivo"]
+    FE["Frontend Web/Móvil\nUX por rol, formularios guiados, dashboard"]
+    API["API Backend Modular\nAutenticación, RBAC, casos de uso"]
+    CORE["Core de Dominio Hexagonal\nreglas, workflows, KPIs, precio"]
+    DASH["Read Model Dashboard Inmediato\nKPIs críticos actualizados al commit"]
+    OUTBOX["Outbox Transaccional\neventos confiables post-commit"]
+    WORKER["Workers Asíncronos\nalertas, notificaciones, auditoría enriquecida"]
+    AI["Adaptador IA\nclasificación, resumen, recomendación con guardrails"]
+  end
+
+  subgraph Data["Datos"]
+    DB[("PostgreSQL / RDS\nfuente de verdad transaccional")]
+    OBJ[("S3\nevidencia visual / fotos")]
+    AUD[("Audit Log\nhistorial de cambios y decisiones")]
+  end
+
+  subgraph Cloud["AWS / evolución"]
+    EB["EventBridge / SQS\neventos y colas"]
+    SNS["SNS / Email / Push\nnotificaciones"]
+    CW["CloudWatch + Logs\nobservabilidad"]
+    IAM["IAM / Secrets / KMS\nseguridad"]
+  end
+
+  MobileUser --> FE
+  SupervisorUser --> FE
+  ManagerUser --> FE
+  FE --> API
+  API --> CORE
+  CORE --> DB
+  CORE --> DASH
+  CORE --> OUTBOX
+  FE --> DASH
+  CORE --> OBJ
+  CORE --> AUD
+  OUTBOX --> WORKER
+  WORKER --> EB
+  WORKER --> SNS
+  WORKER --> AUD
+  AI --> CORE
+  WORKER --> AI
+  API --> CW
+  WORKER --> CW
+  DB --> CW
+  API --> IAM
+  AI --> IAM
+
+  classDef user fill:#E8F1FF,stroke:#2563EB,color:#0B1F3A;
+  classDef core fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#052E16;
+  classDef data fill:#F3E8FF,stroke:#7E22CE,color:#2E1065;
+  classDef cloud fill:#FFF7E6,stroke:#F59E0B,color:#3B2500;
+  class MobileUser,SupervisorUser,ManagerUser user;
+  class FE,API,CORE,DASH,OUTBOX,WORKER,AI core;
+  class DB,OBJ,AUD data;
+  class EB,SNS,CW,IAM cloud;
