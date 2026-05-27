@@ -52,24 +52,3 @@ Defender monolito modular evolutivo con hexagonal porque evita microservicios pr
 POC-01 valida el flujo transaccional + dashboard + Outbox.  
 POC-02 valida scoring IA + guardrails + human-in-the-loop.
 
-## 4. Comandos sugeridos para subir a GitHub
-
-```bash
-git checkout -b release/2.0.0
-mkdir -p docs/{brd,mrd,prd,fsd,adr,diagrams,aportes,prompts,checklists} pocs
-git add .
-git commit -m "docs: entrega final release 2.0.0 App Deteccion Prod"
-git push origin release/2.0.0
-```
-
-## 5. Revisión final antes de enviar
-
-- [ ] Confirmar que la rama en GitHub sea `release/2.0.0`.
-- [ ] Confirmar que todos los archivos estén visibles en GitHub.
-- [ ] Abrir `docs/DTI.md` y verificar enlaces/rutas.
-- [ ] Abrir `docs/diagrams/00_VISTA_RAPIDA_DIAGRAMAS.md`.
-- [ ] Abrir `pocs/POC-01/POC-01.md` y `pocs/POC-02/POC-02.md`.
-- [ ] Confirmar que `AGENTS.md` esté en la raíz.
-- [ ] Confirmar que `docs/PROMPT_MAPPING.md` referencie prompts existentes.
-- [ ] Confirmar que `docs/aportes/release-2.0.0.md` esté completo.
-```
