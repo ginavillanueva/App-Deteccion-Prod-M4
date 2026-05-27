@@ -1,0 +1,91 @@
+classDiagram
+  direction LR
+
+  class ProductoReportado {
+    +UUID id
+    +String sku
+    +String nombre
+    +String lote
+    +Date fechaVencimiento
+    +int diasParaVencer
+    +int cantidadDetectada
+    +EstadoCaso estado
+    +NivelRiesgo riesgo
+    +registrar()
+    +validar()
+    +cerrar()
+  }
+
+  class Tienda {
+    +UUID id
+    +String nombre
+    +String cadena
+    +String zona
+    +String ciudad
+  }
+
+  class EvidenciaVisual {
+    +UUID id
+    +String urlFoto
+    +Date fechaCaptura
+    +String hash
+    +String calidad
+  }
+
+  class AccionComercial {
+    +UUID id
+    +TipoAccion tipo
+    +String motivo
+    +EstadoAprobacion estado
+    +Date fechaAplicacion
+    +aplicar()
+    +aprobar()
+    +rechazar()
+  }
+
+  class PrecioIntervenido {
+    +Money precioAnterior
+    +Money precioNuevoPropuesto
+    +Money precioAprobado
+    +Money precioAplicado
+    +Decimal variacionPct
+    +Money valorEconomicoIntervenido
+    +calcularVariacion()
+    +detectarDiferencia()
+  }
+
+  class Usuario {
+    +UUID id
+    +String nombre
+    +Rol rol
+    +String region
+  }
+
+  class DashboardKPI {
+    +Money valorRiesgo
+    +Money margenProtegido
+    +Decimal variacionPrecioPromedio
+    +int productosCriticos
+    +int accionesPendientes
+    +Date actualizadoEn
+  }
+
+  class EventoDominio {
+    +UUID eventId
+    +String tipo
+    +Date occurredAt
+    +String correlationId
+    +String causationId
+  }
+
+  ProductoReportado "1" --> "1" Tienda : ocurre en
+  ProductoReportado "1" --> "1..*" EvidenciaVisual : respalda
+  ProductoReportado "1" --> "0..*" AccionComercial : gestiona
+  AccionComercial "1" --> "0..1" PrecioIntervenido : puede modificar
+  Usuario "1" --> "0..*" ProductoReportado : reporta/valida
+  Usuario "1" --> "0..*" AccionComercial : aprueba/ejecuta
+  ProductoReportado "1" --> "0..*" EventoDominio : emite
+  PrecioIntervenido "1" --> "0..*" EventoDominio : PriceChanged
+  DashboardKPI ..> ProductoReportado : consolida
+  DashboardKPI ..> AccionComercial : mide impacto
+  DashboardKPI ..> PrecioIntervenido : mide precio

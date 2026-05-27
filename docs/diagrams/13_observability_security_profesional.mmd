@@ -1,0 +1,42 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, Arial, sans-serif", "primaryColor": "#E8F1FF", "primaryTextColor": "#0B1F3A", "primaryBorderColor": "#2F6FED", "lineColor": "#5B6B7A", "secondaryColor": "#F6F8FA", "tertiaryColor": "#FFF7E6", "clusterBkg": "#F8FAFC", "clusterBorder": "#CBD5E1"}, "flowchart": {"curve": "basis", "htmlLabels": true, "nodeSpacing": 45, "rankSpacing": 55}, "sequence": {"mirrorActors": false, "showSequenceNumbers": true}}}%%
+
+flowchart TB
+  title["Seguridad, auditoría y observabilidad — controles transversales"]
+
+  subgraph Security["Seguridad"]
+    RBAC["RBAC por rol\nMercaderista, Vendedor, Supervisor, Gerencia, Finanzas"]
+    Auth["Autenticación\nJWT/OIDC futuro"]
+    DataSec["Protección de datos\nKMS, Secrets, cifrado en reposo/tránsito"]
+    Policy["Políticas de negocio\naprobación de precio, retiro, descuento"]
+  end
+
+  subgraph Audit["Auditoría"]
+    AuditLog["Audit Log inmutable\nquién, qué, cuándo, antes/después"]
+    Evidence["Evidencia visual\nhash + URL + timestamp"]
+    PriceAudit["Auditoría de precio\nprecio anterior/nuevo/aprobado/aplicado"]
+    AITrace["Trazabilidad IA\nprompt id, versión, salida, decisión humana"]
+  end
+
+  subgraph Observability["Observabilidad"]
+    Logs["Logs estructurados\ncorrelationId, causationId"]
+    Metrics["Métricas\nlatencia, errores, outbox lag, freshness dashboard"]
+    Alerts["Alarmas\nSLO incumplido, DLQ, diferencias de precio"]
+    DashOps["Dashboard operativo\nsalud técnica y negocio"]
+  end
+
+  Command["Comando crítico\nregistrar/cambiar precio/aprobar/cerrar"] --> RBAC --> Policy --> AuditLog
+  Policy --> PriceAudit
+  Command --> Evidence
+  Command --> Logs
+  Logs --> Metrics --> Alerts --> DashOps
+  Command --> AITrace
+  Auth --> RBAC
+  DataSec --> AuditLog
+  DataSec --> Evidence
+
+  classDef sec fill:#FEE2E2,stroke:#DC2626,color:#450A0A;
+  classDef aud fill:#FEF3C7,stroke:#D97706,color:#3B2500;
+  classDef obs fill:#E8F1FF,stroke:#2563EB,color:#0B1F3A;
+  class RBAC,Auth,DataSec,Policy sec;
+  class AuditLog,Evidence,PriceAudit,AITrace aud;
+  class Logs,Metrics,Alerts,DashOps obs;

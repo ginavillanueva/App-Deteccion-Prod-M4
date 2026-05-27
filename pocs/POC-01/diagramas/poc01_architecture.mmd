@@ -1,0 +1,28 @@
+---
+title: POC-01 - Arquitectura de prueba: transacción + dashboard inmediato + outbox
+---
+flowchart LR
+  actor[Generador sintético de casos
+1000 registros]:::actor --> uc[Use Case
+Registrar producto próximo a vencer
++ cambio de precio]:::core
+  uc --> tx{Transacción única}:::decision
+  tx --> pc[(product_case
+Estado fuente)]:::data
+  tx --> ds[(dashboard_operational_snapshot
+KPIs críticos inmediatos)]:::data
+  tx --> oe[(outbox_event
+Eventos confiables)]:::data
+  oe --> alert[Alertas futuras]:::async
+  oe --> audit[Auditoría enriquecida]:::async
+  oe --> ia[IA asistiva
+solo lectura/recomendación]:::ai
+  ds --> gerente[Gerencia
+Visibilidad inmediata]:::actor
+
+  classDef actor fill:#EAF2FF,stroke:#1C4E80,stroke-width:1px,color:#0B1F33;
+  classDef core fill:#EFFFF4,stroke:#267A3E,stroke-width:1px,color:#102A18;
+  classDef decision fill:#FFF7E6,stroke:#B76E00,stroke-width:1px,color:#332100;
+  classDef data fill:#F8F5FF,stroke:#6B46C1,stroke-width:1px,color:#20103A;
+  classDef async fill:#F3F4F6,stroke:#4B5563,stroke-width:1px,color:#111827;
+  classDef ai fill:#FFF1F2,stroke:#BE123C,stroke-width:1px,color:#3B0812;

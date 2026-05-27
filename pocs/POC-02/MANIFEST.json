@@ -1,0 +1,19 @@
+{
+  "id": "POC-02",
+  "title": "IA con guardrails y scoring cuantificado",
+  "version": "v4.0",
+  "status": "APROBADO",
+  "files": [
+    "POC-02.md",
+    "README.md",
+    "scripts/poc02_ai_guardrails.py",
+    "data/poc02_dataset.csv",
+    "evidencia/classification_results.csv",
+    "evidencia/prompt_injection_tests.json",
+    "evidencia/ai_audit_log_sample.json",
+    "evidencia/metrics.json",
+    "evidencia/risk_distribution.png",
+    "evidencia/confusion_matrix.png",
+    "evidencia/score_distribution.png"
+  ]
+}

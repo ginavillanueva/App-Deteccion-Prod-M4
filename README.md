@@ -1,44 +1,78 @@
-# App-Deteccion-Prod-M4
-Solución digital centrada en el usuario para la detección, trazabilidad y gestión estratégica de productos críticos en retail, integrando control de vencimientos, precios y acciones comerciales.
-## Descripción
+# App Detección Prod — Release 2.0.0
 
-App Detección Prod es una solución digital orientada a mejorar la gestión, trazabilidad y control de productos críticos en canal retail, especialmente productos próximos a vencer, productos con baja rotación y productos con acciones comerciales activas.
+Entrega final del proyecto **App Detección Prod**, preparada para la rama `release/2.0.0`.
 
-El proyecto nace a partir de una problemática real detectada en empresas distribuidoras e importadoras que actualmente gestionan estos procesos mediante WhatsApp, fotografías dispersas y reportes no estructurados, generando:
+## Propósito del producto
 
-- Falta de trazabilidad.
-- Pérdidas económicas.
-- Baja visibilidad operativa.
-- Errores en descuentos y cambios de precio.
-- Demoras en la toma de decisiones.
-- Ausencia de indicadores estratégicos.
+App Detección Prod transforma un proceso informal de gestión de productos próximos a vencer —basado en WhatsApp, Excel, fotografías dispersas y comunicación verbal— en una plataforma trazable, medible y orientada a decisiones. El sistema centraliza el registro operativo, la validación táctica, las acciones comerciales, el control de precios, la medición de impacto financiero, el dashboard gerencial y la asistencia IA gobernada.
 
-## Objetivo del Proyecto
+## Estructura evaluable según Defensa Final
 
-Transformar un proceso manual, reactivo y fragmentado en una solución digital centralizada, medible y centrada en el usuario, permitiendo conectar operación, supervisión y estrategia comercial en tiempo real.
+```text
+/
+├── AGENTS.md
+├── README.md
+├── MANIFEST_RELEASE_2.0.0.json
+├── docs/
+│   ├── DTI.md
+│   ├── PROMPT_MAPPING.md
+│   ├── roadmap.md
+│   ├── MAPA_RAPIDO_DEFENSA.md
+│   ├── brd/BRD_vFinal.md
+│   ├── mrd/MRD_vFinal.md
+│   ├── prd/PRD_vFinal.md
+│   ├── fsd/FSD_vFinal.md
+│   ├── adr/0001-*.md ... 0005-*.md
+│   ├── diagrams/*.mmd
+│   ├── prompts/<area>/PR-*.md
+│   ├── aportes/release-2.0.0.md
+│   └── checklists/
+└── pocs/
+    ├── POC-01/
+    └── POC-02/
+```
 
-## Usuarios Principales
+## Trazabilidad principal
 
-- Mercaderistas
-- Supervisores regionales
-- Vendedores
-- Gerencia comercial
+```text
+BRD → MRD → PRD → FSD → ADRs → DTI → Diagramas → POCs → AGENTS → PROMPT_MAPPING → Roadmap
+```
 
-## Capacidades Principales del Sistema
+## Decisiones arquitectónicas aprobadas
 
-- Registro de productos críticos.
-- Control de fechas de vencimiento.
-- Gestión de descuentos y promociones.
-- Registro de cambios de precio.
-- Trazabilidad de acciones comerciales.
-- Evidencia fotográfica.
-- Alertas operativas.
-- Dashboards estratégicos.
-- Indicadores financieros y operativos.
-- Seguimiento en tiempo real.
+| ADR | Decisión |
+|---|---|
+| ADR-0001 | Monolito modular evolutivo con límites claros de dominio. |
+| ADR-0002 | Arquitectura hexagonal para proteger dominio, casos de uso, puertos y adaptadores. |
+| ADR-0003 | Event-driven + Outbox, diferenciando dashboard inmediato de procesos asíncronos. |
+| ADR-0004 | IA asistiva con guardrails y human-in-the-loop. |
+| ADR-0005 | Despliegue AWS, observabilidad, seguridad y evolución cloud-ready. |
 
-  
-## Autor
+## Evidencia ejecutada
 
-Gina Fabiana Villanueva Viscarra
-Maestría en Desarrollo de Productos de Software con IA
+| POC | Qué valida | Evidencia |
+|---|---|---|
+| POC-01 | Registro transaccional, dashboard inmediato y Outbox | scripts, SQLite, métricas, gráficos y trazabilidad. |
+| POC-02 | IA con scoring BAJO/MEDIO/ALTO, guardrails y bloqueo adversarial | dataset, resultados, métricas, prompt tests y auditoría. |
+
+## Indicadores críticos
+
+- Productos próximos a vencer por sala, región, marca y estado.
+- Productos sin acción comercial.
+- Valor financiero en riesgo.
+- Precio anterior, precio nuevo, variación y valor intervenido.
+- Diferencia entre precio aprobado y precio aplicado.
+- Casos con cambio de precio no aprobado.
+- Frescura del dashboard gerencial.
+- Eventos Outbox pendientes, procesados o fallidos.
+- Casos clasificados por IA como BAJO, MEDIO o ALTO.
+
+## Rama de entrega
+
+La entrega debe subirse a la rama:
+
+```bash
+release/2.0.0
+```
+
+Todo lo que no esté en esa rama al momento de evaluación queda fuera de la rúbrica.

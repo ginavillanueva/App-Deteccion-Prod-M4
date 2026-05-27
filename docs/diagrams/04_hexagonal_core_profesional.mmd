@@ -1,0 +1,65 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, Arial, sans-serif", "primaryColor": "#E8F1FF", "primaryTextColor": "#0B1F3A", "primaryBorderColor": "#2F6FED", "lineColor": "#5B6B7A", "secondaryColor": "#F6F8FA", "tertiaryColor": "#FFF7E6", "clusterBkg": "#F8FAFC", "clusterBorder": "#CBD5E1"}, "flowchart": {"curve": "basis", "htmlLabels": true, "nodeSpacing": 45, "rankSpacing": 55}, "sequence": {"mirrorActors": false, "showSequenceNumbers": true}}}%%
+
+flowchart LR
+  title["Arquitectura Hexagonal — Dominio aislado de infraestructura"]
+
+  subgraph Inbound["Adaptadores de entrada"]
+    Web["Web/Móvil UI"]
+    Api["REST API"]
+    Batch["Job programado\nalertas por vencimiento"]
+    Test["Tests / POCs"]
+  end
+
+  subgraph Hexagon["Núcleo hexagonal"]
+    subgraph AppLayer["Casos de uso"]
+      U1["Registrar producto"]
+      U2["Validar reporte"]
+      U3["Aplicar acción comercial"]
+      U4["Cambiar precio"]
+      U5["Actualizar dashboard"]
+      U6["Solicitar clasificación IA"]
+    end
+    subgraph DomLayer["Dominio"]
+      D1["Reglas de vencimiento"]
+      D2["Política de precio"]
+      D3["Política de aprobación"]
+      D4["Eventos de dominio"]
+    end
+  end
+
+  subgraph Outbound["Adaptadores de salida"]
+    Pg["PostgreSQL/RDS"]
+    S3["S3 evidencia visual"]
+    Outbox["Outbox + EventBridge/SQS"]
+    AI["Proveedor IA"]
+    Notify["Notificaciones"]
+    Obs["Logs/Métricas"]
+  end
+
+  Web --> Api --> U1
+  Api --> U2
+  Api --> U3
+  Api --> U4
+  Batch --> U5
+  Test --> U1
+  U1 --> D1
+  U2 --> D3
+  U3 --> D2
+  U4 --> D2
+  U5 --> D4
+  U6 --> D3
+  D1 --> Pg
+  D2 --> Pg
+  D3 --> Pg
+  D4 --> Outbox
+  U1 --> S3
+  U6 --> AI
+  Outbox --> Notify
+  Api --> Obs
+
+  classDef inbound fill:#E8F1FF,stroke:#2563EB,color:#0B1F3A;
+  classDef core fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#052E16;
+  classDef outbound fill:#FFF7E6,stroke:#F59E0B,color:#3B2500;
+  class Web,Api,Batch,Test inbound;
+  class U1,U2,U3,U4,U5,U6,D1,D2,D3,D4 core;
+  class Pg,S3,Outbox,AI,Notify,Obs outbound;

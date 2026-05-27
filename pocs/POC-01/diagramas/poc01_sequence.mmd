@@ -1,0 +1,22 @@
+---
+title: POC-01 - Secuencia validada del flujo crítico
+---
+sequenceDiagram
+  autonumber
+  participant Gen as Generador de carga
+  participant UC as Caso de uso: Registrar producto
+  participant DB as BD transaccional
+  participant Dash as Dashboard inmediato
+  participant Outbox as Outbox
+  participant Ger as Gerencia/Supervisión
+
+  Gen->>UC: Crear caso sintético con SKU, vencimiento, cantidad, precio anterior/nuevo
+  UC->>DB: BEGIN TRANSACTION
+  UC->>DB: Insertar product_case
+  UC->>Dash: Actualizar KPIs críticos en la misma transacción
+  UC->>Outbox: Insertar ProductNearExpiryRegistered.v1
+  UC->>Outbox: Insertar PriceChanged.v1
+  DB-->>UC: COMMIT
+  UC-->>Gen: OK + latencia medida
+  Ger->>Dash: Consulta de KPIs actualizados
+  Dash-->>Ger: Casos críticos, valor en riesgo, valor intervenido, variación precio

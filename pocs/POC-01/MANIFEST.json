@@ -1,0 +1,50 @@
+{
+  "artifact": "POC-01",
+  "project": "App Deteccion Prod",
+  "version": "v3.0 defensa final nivel doctorado",
+  "status": "para_revision",
+  "generated_at": "2026-05-27",
+  "includes": [
+    "POC-01.md",
+    "README.md",
+    "scripts/poc01_benchmark.py",
+    "evidencia/metrics.json",
+    "evidencia/latencies.csv",
+    "evidencia/dashboard_snapshot.json",
+    "evidencia/poc01_app_deteccion_prod.sqlite",
+    "diagramas/*.mmd",
+    "docs/COHERENCE_AUDIT.md",
+    "docs/DEFENSE_GUIDE.md",
+    "docs/TRACEABILITY_MATRIX.md"
+  ],
+  "metrics_summary": {
+    "poc_id": "POC-01",
+    "records_attempted": 1000,
+    "records_inserted": 1000,
+    "errors": 0,
+    "throughput_records_per_second": 1660.59,
+    "latency_avg_ms": 0.567,
+    "latency_p50_ms": 0.421,
+    "latency_p95_ms": 1.417,
+    "latency_p99_ms": 2.696,
+    "outbox_events_total": 2000,
+    "price_changed_events_total": 1000,
+    "dashboard_open_cases": 1000,
+    "dashboard_critical_cases": 418,
+    "dashboard_units_at_risk": 40898,
+    "dashboard_financial_value_at_risk": 3893025.68,
+    "dashboard_price_changed_cases": 1000,
+    "dashboard_total_price_delta_value": 709010.45,
+    "dashboard_consistency_ok": true,
+    "db_path": "/mnt/data/pocs/POC-01/evidencia/poc01_app_deteccion_prod.sqlite"
+  },
+  "approved_dependency_docs": [
+    "BRD v1.1 KPI Precio",
+    "MRD v1.1 KPI Precio",
+    "PRD v1.1 KPI Precio",
+    "FSD v1.1 KPI Precio",
+    "DTI v1.3 Defensa Final",
+    "ADR-0001..0005",
+    "Diagramas profesionales"
+  ]
+}

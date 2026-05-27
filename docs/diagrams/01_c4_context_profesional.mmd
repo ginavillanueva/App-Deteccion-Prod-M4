@@ -1,0 +1,43 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, Arial, sans-serif", "primaryColor": "#E8F1FF", "primaryTextColor": "#0B1F3A", "primaryBorderColor": "#2F6FED", "lineColor": "#5B6B7A", "secondaryColor": "#F6F8FA", "tertiaryColor": "#FFF7E6", "clusterBkg": "#F8FAFC", "clusterBorder": "#CBD5E1"}, "flowchart": {"curve": "basis", "htmlLabels": true, "nodeSpacing": 45, "rankSpacing": 55}, "sequence": {"mirrorActors": false, "showSequenceNumbers": true}}}%%
+
+flowchart LR
+  %% C4 Nivel 1 — Contexto
+  title["C4 Nivel 1 — Contexto del Sistema App Detección Prod"]
+
+  subgraph Operacion["Nivel operativo y táctico"]
+    M["Mercaderista\nRegistra producto, evidencia, precio y cantidad"]
+    V["Vendedor Canal Moderno\nDefine/ejecuta acción comercial"]
+    S["Supervisor Regional\nValida, prioriza y controla SLA"]
+  end
+
+  subgraph Estrategia["Nivel estratégico"]
+    G["Gerencia Comercial\nConsulta KPIs, margen, merma, rotación y precio"]
+    F["Finanzas / Administración\nEvalúa impacto económico y desviaciones"]
+  end
+
+  SYS[["App Detección Prod\nPlataforma trazable para productos próximos a vencer\nregistro + acciones + precio + dashboard + IA asistiva"]]
+
+  subgraph Externos["Sistemas / canales externos"]
+    ERP[("ERP / Inventario futuro\nstock, costo, ventas")]
+    POS[("POS / Ventas futuro\nrotación real")]
+    WA["WhatsApp / Excel actual\ncanal a reemplazar"]
+    AWS["AWS Cloud\ndespliegue, seguridad, observabilidad"]
+  end
+
+  M -->|Reporta producto, lote, vencimiento, foto, precio actual| SYS
+  V -->|Registra acción comercial, descuento, bandeo, precio nuevo| SYS
+  S -->|Valida, aprueba, prioriza, solicita corrección| SYS
+  G -->|Consulta dashboard inmediato y KPIs financieros| SYS
+  F -->|Audita impacto, margen protegido y diferencias de precio| SYS
+
+  SYS <-->|Integración planificada| ERP
+  SYS <-->|Integración planificada| POS
+  WA -. proceso actual a sustituir .-> SYS
+  SYS -->|Infraestructura segura y observable| AWS
+
+  classDef actor fill:#E8F1FF,stroke:#2F6FED,stroke-width:1.5px,color:#0B1F3A;
+  classDef system fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#052E16;
+  classDef external fill:#FFF7E6,stroke:#F59E0B,stroke-width:1.5px,color:#3B2500;
+  class M,V,S,G,F actor;
+  class SYS system;
+  class ERP,POS,WA,AWS external;

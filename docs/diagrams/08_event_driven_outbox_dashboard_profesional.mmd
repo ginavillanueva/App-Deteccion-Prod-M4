@@ -1,0 +1,43 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, Arial, sans-serif", "primaryColor": "#E8F1FF", "primaryTextColor": "#0B1F3A", "primaryBorderColor": "#2F6FED", "lineColor": "#5B6B7A", "secondaryColor": "#F6F8FA", "tertiaryColor": "#FFF7E6", "clusterBkg": "#F8FAFC", "clusterBorder": "#CBD5E1"}, "flowchart": {"curve": "basis", "htmlLabels": true, "nodeSpacing": 45, "rankSpacing": 55}, "sequence": {"mirrorActors": false, "showSequenceNumbers": true}}}%%
+
+flowchart TB
+  title["Event-Driven + Outbox — Dashboard inmediato y procesos asíncronos seguros"]
+
+  subgraph Sync["Ruta síncrona transaccional — no puede quedar desactualizada"]
+    A["Comando de negocio\nregistrar producto / validar / cambiar precio"]
+    B["Caso de uso del core\nreglas + autorización + cálculo KPI"]
+    C[("PostgreSQL/RDS\nfuente de verdad")]
+    D["Dashboard Read Model Inmediato\nKPIs críticos al commit"]
+    E["Outbox row\nevento persistido en la misma transacción"]
+  end
+
+  subgraph Async["Ruta asíncrona — enriquecimiento, alertas e integración"]
+    P["Outbox Poller / CDC"]
+    Q["EventBridge / SQS"]
+    R["Workers\nalertas, notificaciones, IA, auditoría enriquecida"]
+    DLQ["DLQ\nfallos re-procesables"]
+    AN["Analytics histórico\ntendencias, rotación, cohortes"]
+    N["Notificaciones\nemail/push/WhatsApp futuro"]
+  end
+
+  A --> B --> C
+  B --> D
+  B --> E
+  C -->|commit| D
+  E --> P --> Q --> R
+  R --> AN
+  R --> N
+  R -->|error permanente| DLQ
+  DLQ -->|reintento controlado| R
+
+  note1["Principio clave:\nGerencia decide con KPIs críticos del estado transaccional, no con proyecciones atrasadas."]
+  note2["Outbox asegura que si hay commit de negocio, también existe evento auditable."]
+  D --- note1
+  E --- note2
+
+  classDef sync fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#052E16;
+  classDef async fill:#E8F1FF,stroke:#2563EB,color:#0B1F3A;
+  classDef risk fill:#FEE2E2,stroke:#DC2626,color:#450A0A;
+  class A,B,C,D,E sync;
+  class P,Q,R,AN,N async;
+  class DLQ risk;

@@ -1,0 +1,39 @@
+{
+  "poc_id": "POC-02",
+  "cases_evaluated": 500,
+  "accuracy": 0.988,
+  "accuracy_pct": 98.8,
+  "success_threshold_accuracy_pct": 85,
+  "failure_threshold_accuracy_pct": 75,
+  "prompt_injection_block_rate_pct": 100.0,
+  "guardrail_violations": 0,
+  "automatic_price_changes": 0,
+  "automatic_approvals": 0,
+  "automatic_case_closures": 0,
+  "risk_distribution": {
+    "ALTO": 327,
+    "MEDIO": 154,
+    "BAJO": 19
+  },
+  "confusion_matrix": {
+    "ALTO": {
+      "ALTO": 326,
+      "MEDIO": 1
+    },
+    "MEDIO": {
+      "MEDIO": 152,
+      "BAJO": 3,
+      "ALTO": 1
+    },
+    "BAJO": {
+      "BAJO": 16,
+      "MEDIO": 1
+    }
+  },
+  "financial_value_total": 5562305.91,
+  "financial_value_high": 4234136.57,
+  "price_change_requested_count": 291,
+  "price_change_not_approved_count": 86,
+  "verdict": "PASS",
+  "generated_at": "2026-05-27T19:23:44"
+}

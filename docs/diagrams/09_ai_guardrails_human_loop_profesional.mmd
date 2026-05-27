@@ -1,0 +1,24 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, Arial, sans-serif", "primaryColor": "#E8F1FF", "primaryTextColor": "#0B1F3A", "primaryBorderColor": "#2F6FED", "lineColor": "#5B6B7A", "secondaryColor": "#F6F8FA", "tertiaryColor": "#FFF7E6", "clusterBkg": "#F8FAFC", "clusterBorder": "#CBD5E1"}, "flowchart": {"curve": "basis", "htmlLabels": true, "nodeSpacing": 45, "rankSpacing": 55}, "sequence": {"mirrorActors": false, "showSequenceNumbers": true}}}%%
+
+flowchart LR
+  title["IA con Guardrails — Asistencia, no autonomía comercial irreversible"]
+
+  Input["Datos del caso\nproducto, vencimiento, precio, cantidad, foto, historial"] --> Pre["Preprocesamiento\nnormalización + validación + minimización de datos"]
+  Pre --> GuardIn["Guardrails de entrada\nno secretos, no PII innecesaria, prompt seguro"]
+  GuardIn --> AI["Modelo IA / LLM\nclasifica riesgo, resume evidencia, sugiere prioridad"]
+  AI --> GuardOut["Guardrails de salida\nJSON schema, rangos permitidos, no acción irreversible"]
+  GuardOut --> Explain["Explicación trazable\npor qué es riesgo alto/medio/bajo"]
+  Explain --> Human["Human-in-the-loop\nSupervisor/Vendedor aprueba acción"]
+  Human --> Core["Core transaccional\nregistra decisión humana"]
+  Core --> Dash["Dashboard\nIA como señal, no fuente de verdad"]
+  Core --> Audit["Auditoría\nprompt id, versión, usuario, decisión"]
+
+  Bad["La IA NO puede:\n- cambiar precios automáticamente\n- retirar productos\n- aprobar descuentos\n- cerrar casos críticos"]
+  GuardOut --- Bad
+
+  classDef ai fill:#F3E8FF,stroke:#7E22CE,color:#2E1065;
+  classDef control fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#052E16;
+  classDef danger fill:#FEE2E2,stroke:#DC2626,color:#450A0A;
+  class Input,Pre,GuardIn,AI,GuardOut,Explain ai;
+  class Human,Core,Dash,Audit control;
+  class Bad danger;
