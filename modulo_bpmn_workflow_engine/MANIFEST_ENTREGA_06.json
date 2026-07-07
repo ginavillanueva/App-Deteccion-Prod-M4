@@ -1,0 +1,25 @@
+{
+  "project": "App Deteccion Prod BPMN Workflow Engine",
+  "delivery": "06",
+  "status": "persistencia_sqlite_para_revision",
+  "approved": [
+    "00_PLAN_EJECUCION_APROBADO.md",
+    "docs/PRD.md",
+    "docs/FSD.md",
+    "src/domain/",
+    "src/runtime/",
+    "src/orchestration/"
+  ],
+  "for_review": [
+    "src/persistence/",
+    "docs/README_PERSISTENCE.md",
+    "PR_implementation/PR_04_persistence_sqlite.md",
+    "docs/TRAZABILIDAD_ENTREGA_06.md",
+    "tests/test_persistence_sqlite.py"
+  ],
+  "validation": {
+    "compileall": "OK",
+    "unittest": "Ran 16 tests - OK"
+  },
+  "next_expected_approval": "aprobado persistencia"
+}

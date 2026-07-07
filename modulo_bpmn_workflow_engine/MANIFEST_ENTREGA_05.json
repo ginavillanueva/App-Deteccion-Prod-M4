@@ -1,0 +1,24 @@
+{
+  "project": "App Deteccion Prod BPMN Workflow Engine",
+  "delivery": "05",
+  "status": "orquestador_cola_observer_para_revision",
+  "approved": [
+    "00_PLAN_EJECUCION_APROBADO.md",
+    "docs/PRD.md",
+    "docs/FSD.md",
+    "src/domain/",
+    "src/runtime/"
+  ],
+  "for_review": [
+    "src/orchestration/",
+    "docs/README_ORCHESTRATION.md",
+    "PR_implementation/PR_03_orchestrator_queue.md",
+    "docs/TRAZABILIDAD_ENTREGA_05.md",
+    "tests/test_orchestration.py"
+  ],
+  "validation": {
+    "compileall": "OK",
+    "unittest": "Ran 13 tests - OK"
+  },
+  "next_expected_approval": "aprobado orquestador"
+}

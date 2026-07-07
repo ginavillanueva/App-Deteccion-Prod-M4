@@ -1,0 +1,30 @@
+{
+  "project": "App Detección Prod — BPMN Workflow Engine",
+  "delivery": "Entrega 10",
+  "date": "2026-07-07",
+  "approved": [
+    "Plan maestro",
+    "PRD",
+    "FSD",
+    "Modelo de dominio",
+    "Runtime engine",
+    "Orquestador + cola Observer",
+    "Persistencia SQLite",
+    "Tests obligatorios completos",
+    "Prompt mappings",
+    "Aportes individuales"
+  ],
+  "in_review": [
+    "README final"
+  ],
+  "pending": [
+    "ZIP final"
+  ],
+  "main_artifacts": [
+    "README.md",
+    "docs/README_REPOSITORY.md",
+    "PR_implementation/PR_08_repository_readme.md",
+    "docs/TRAZABILIDAD_ENTREGA_10.md",
+    "00_CONTROL_APROBACIONES.md"
+  ]
+}

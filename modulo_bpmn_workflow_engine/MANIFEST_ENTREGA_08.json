@@ -1,0 +1,29 @@
+{
+  "project": "App Deteccion Prod BPMN Workflow Engine",
+  "delivery": "Entrega 08",
+  "status": "Prompt mappings para revision",
+  "date": "2026-07-07",
+  "approved": [
+    "00_PLAN_EJECUCION_APROBADO.md",
+    "docs/PRD.md",
+    "docs/FSD.md",
+    "src/domain/",
+    "src/runtime/",
+    "src/orchestration/",
+    "src/persistence/",
+    "tests/"
+  ],
+  "for_review": [
+    "docs/prompt_mappings.md",
+    "docs/README_PROMPT_MAPPINGS.md",
+    "PR_implementation/PR_06_prompt_mappings.md",
+    "docs/TRAZABILIDAD_ENTREGA_08.md"
+  ],
+  "validation": {
+    "compile": "python -m compileall src",
+    "tests": "python -m unittest discover -s tests",
+    "result": "Ran 28 tests OK"
+  },
+  "next_expected_approval": "aprobado prompts",
+  "next_delivery": "Entrega 09 - APORTES.md"
+}

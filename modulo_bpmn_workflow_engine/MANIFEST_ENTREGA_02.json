@@ -1,0 +1,46 @@
+{
+  "project": "App Detección Prod — Workflow Engine BPMN 2.0",
+  "delivery": "Entrega 02",
+  "date": "2026-07-06",
+  "status": "Plan aprobado + PRD aprobado + FSD para revisión",
+  "approved_deliverables": [
+    {
+      "id": "E0",
+      "name": "Plan maestro de ejecución",
+      "file": "00_PLAN_EJECUCION_APROBADO.md",
+      "status": "APPROVED",
+      "approval_phrase": "aprobado plan"
+    },
+    {
+      "id": "E1",
+      "name": "PRD ligero",
+      "file": "docs/PRD.md",
+      "status": "APPROVED",
+      "approval_phrase": "aprobado PRD"
+    }
+  ],
+  "proposed_deliverables": [
+    {
+      "id": "E2",
+      "name": "FSD ligero",
+      "file": "docs/FSD.md",
+      "status": "FOR_REVIEW",
+      "expected_approval_phrase": "aprobado FSD"
+    }
+  ],
+  "next_deliverable": {
+    "id": "E3",
+    "name": "Modelo de dominio Python",
+    "file": "src/domain/",
+    "status": "PENDING"
+  },
+  "repository_structure_initialized": [
+    "docs/",
+    "PR_implementation/",
+    "src/domain/",
+    "src/runtime/",
+    "src/orchestration/",
+    "src/persistence/",
+    "tests/"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "project": "App Deteccion Prod BPMN Workflow Engine",
+  "delivery": "Entrega 07 - Tests obligatorios completos",
+  "date": "2026-07-07",
+  "status": "PARA_REVISION",
+  "approved_previous_deliverables": [
+    "00_PLAN_EJECUCION_APROBADO.md",
+    "docs/PRD.md",
+    "docs/FSD.md",
+    "src/domain/",
+    "src/runtime/",
+    "src/orchestration/",
+    "src/persistence/"
+  ],
+  "new_or_updated_files": [
+    "tests/test_required_scenarios.py",
+    "src/orchestration/executor.py",
+    "src/orchestration/__init__.py",
+    "docs/README_TESTS.md",
+    "PR_implementation/PR_05_mandatory_tests.md",
+    "docs/TRAZABILIDAD_ENTREGA_07.md",
+    "00_CONTROL_APROBACIONES.md",
+    "README_REVISION.md"
+  ],
+  "validation": {
+    "compileall": "OK",
+    "unittest_discover": "Ran 28 tests - OK"
+  },
+  "next_expected_approval": "aprobado tests"
+}

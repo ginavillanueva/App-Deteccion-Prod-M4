@@ -1,0 +1,403 @@
+{
+  "package": "App_Deteccion_Prod_BPMN_ENTREGA_FINAL_APROBADA_LIMPIA",
+  "status": "APROBADO / ENTREGA FINAL / PAQUETE LIMPIO",
+  "generated_on": "2026-07-07",
+  "note": "El manifest excluye su propio archivo para evitar hash autorreferencial. Se retiró el archivo interno de guía de subida a GitHub por solicitud de la autora.",
+  "validation": {
+    "compileall": "OK",
+    "unittest": "Ran 28 tests OK"
+  },
+  "file_count_excluding_manifest": 78,
+  "files": [
+    {
+      "path": "00_CONTROL_APROBACIONES.md",
+      "size_bytes": 3708,
+      "sha256": "ba6c5da2b7ed56e6f9ded13bfdb2fb669c3634334978d24ffee03a848c016658"
+    },
+    {
+      "path": "00_PLAN_EJECUCION_APROBADO.md",
+      "size_bytes": 5594,
+      "sha256": "efc87d36085ace637875f147c721ddef24ee8dbd7d98cbd7b0dd7c6d33dc6b78"
+    },
+    {
+      "path": "MANIFEST_ENTREGA_02.json",
+      "size_bytes": 1086,
+      "sha256": "211ce45fc5d85a9ba3e99f8adddf328e091988501c3eb2c77258c29df7fab496"
+    },
+    {
+      "path": "MANIFEST_ENTREGA_04.json",
+      "size_bytes": 718,
+      "sha256": "e8d18679247ee70c721ad468b8358e33ebfe03e6f4db85ef306f8d2c2fa12173"
+    },
+    {
+      "path": "MANIFEST_ENTREGA_05.json",
+      "size_bytes": 614,
+      "sha256": "57cb6de3c02ee7c0dda7a420881852bb00a1daec3a6b74c1ca8acd0e986bd244"
+    },
+    {
+      "path": "MANIFEST_ENTREGA_06.json",
+      "size_bytes": 636,
+      "sha256": "ef40eb55fa8edc97d46d63fed4f8d09cb95c375ade31510aa67ee363a1aec179"
+    },
+    {
+      "path": "MANIFEST_ENTREGA_07.json",
+      "size_bytes": 838,
+      "sha256": "54d62d98609e2f5d4e8b44af235c26c3ad20f78d9a2f11729f7c1851c354b5fb"
+    },
+    {
+      "path": "MANIFEST_ENTREGA_08.json",
+      "size_bytes": 779,
+      "sha256": "95543a5053712f9d76be1d34f3d9c7abc40d7fc8c005bd446f1a71224f0247cc"
+    },
+    {
+      "path": "MANIFEST_ENTREGA_09.json",
+      "size_bytes": 648,
+      "sha256": "441879ca29a0b8d0a8c87b56189c724a234b91397af2c1988ab7527ebda2a33b"
+    },
+    {
+      "path": "MANIFEST_ENTREGA_10.json",
+      "size_bytes": 651,
+      "sha256": "3d2a6a00563c7ebcd46cd45364834c4d31a35c78f8af739913e8f7537cf372a2"
+    },
+    {
+      "path": "PR_implementation/.gitkeep",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "PR_implementation/PR_01_domain_model.md",
+      "size_bytes": 3361,
+      "sha256": "8abee0c957df676582fe4d7621f7b7a0fc5c9bf0057fd6e199fa724debfb9edf"
+    },
+    {
+      "path": "PR_implementation/PR_02_runtime_engine.md",
+      "size_bytes": 5646,
+      "sha256": "6e71b7e57f84192463a590b87fe0c09ee145f500a7ddbb97c04348f76991739f"
+    },
+    {
+      "path": "PR_implementation/PR_03_orchestrator_queue.md",
+      "size_bytes": 5402,
+      "sha256": "3672f1c58e2c01f7e1b1504af4af3a08133feff208b255e614c70539bf0c42a9"
+    },
+    {
+      "path": "PR_implementation/PR_04_persistence_sqlite.md",
+      "size_bytes": 4341,
+      "sha256": "192728d3d2982023d6889f8cb451a87d53ddef85999aeccd3b4dfc004befcf33"
+    },
+    {
+      "path": "PR_implementation/PR_05_mandatory_tests.md",
+      "size_bytes": 4456,
+      "sha256": "aa5454a1803075008d8ef01836515ace5eee37cd907740d74e32b4e117c1dd5e"
+    },
+    {
+      "path": "PR_implementation/PR_06_prompt_mappings.md",
+      "size_bytes": 3266,
+      "sha256": "de5671087ffc689d9c169e5ec7b9212a749d9109a1ddcd1d5f0cfcb429f9211e"
+    },
+    {
+      "path": "PR_implementation/PR_07_individual_contribution.md",
+      "size_bytes": 2561,
+      "sha256": "a34ba6251f3fdce7ba6d892f096873feaeec47373782cacf4a4c04042c7339ae"
+    },
+    {
+      "path": "PR_implementation/PR_08_repository_readme.md",
+      "size_bytes": 1842,
+      "sha256": "8e6c19951ab3ef642aa8f26d000d6990e0bc4d86356a280652c97faf9828bf4a"
+    },
+    {
+      "path": "README.md",
+      "size_bytes": 12757,
+      "sha256": "0a5cfa11f8c975e5b38c442ccfa34aab0450d382416ba8282f95badc2153d037"
+    },
+    {
+      "path": "README_ENTREGA_FINAL.md",
+      "size_bytes": 1391,
+      "sha256": "22872b7f17dcea6c00a86c058c5d5ea55d2cf7ee601e59ebeb0b9fb4b0b9c198"
+    },
+    {
+      "path": "README_REVISION.md",
+      "size_bytes": 1137,
+      "sha256": "ec56fa34b03352acb0c1f4e762cdd167796c15078a75b49d5d9e43c23615e9a4"
+    },
+    {
+      "path": "docs/APORTES.md",
+      "size_bytes": 8178,
+      "sha256": "796646b62410be99840cfeffe41310204136a171f5ede8395953874a685528c3"
+    },
+    {
+      "path": "docs/AUDITORIA_FINAL_ZIP.md",
+      "size_bytes": 4619,
+      "sha256": "5ffaa044b7e3a71869d6f49cc927a9efed5c791ccf1f157dcad5a2b2af4dbf5e"
+    },
+    {
+      "path": "docs/FSD.md",
+      "size_bytes": 38335,
+      "sha256": "5bfed8f25cd3f00134a6a4f4b43f500b1984398281dcc6d97de5ab83e4c45029"
+    },
+    {
+      "path": "docs/PRD.md",
+      "size_bytes": 16539,
+      "sha256": "a77eafeff38ac1f960aea2595faae814f186ea9cab0c3e2704687e72384ede85"
+    },
+    {
+      "path": "docs/README_APORTES.md",
+      "size_bytes": 921,
+      "sha256": "cb8323d829573532377bc443a959926fd9fe542ec10e888f9457a504c723e682"
+    },
+    {
+      "path": "docs/README_DOMAIN_MODEL.md",
+      "size_bytes": 2852,
+      "sha256": "4f1479585aff6e861386d9c1c89777186b838d2ca737966ad2903a8e0bc3f74e"
+    },
+    {
+      "path": "docs/README_ORCHESTRATION.md",
+      "size_bytes": 5485,
+      "sha256": "cbed8952c6c3895d29679360088b67f412095f4e6aec5fbed5570fb75f90c56e"
+    },
+    {
+      "path": "docs/README_PERSISTENCE.md",
+      "size_bytes": 3688,
+      "sha256": "9226d0bb59b1d6bc64d8eb85762ed201e3eb3c098078d3a803c55a27d9264190"
+    },
+    {
+      "path": "docs/README_PROMPT_MAPPINGS.md",
+      "size_bytes": 1200,
+      "sha256": "04be3b42880797101d6a2675fa6bb5b3bf7a8244dbb1889470158137663d02e4"
+    },
+    {
+      "path": "docs/README_REPOSITORY.md",
+      "size_bytes": 1226,
+      "sha256": "45ffc2ad97134f8091c033d90d10694b3694f5199f19fe6a7497db9e98262583"
+    },
+    {
+      "path": "docs/README_RUNTIME_ENGINE.md",
+      "size_bytes": 4613,
+      "sha256": "a70c2960c3201f21c8f33d2ba6fe034056b6c48782a5ca293f454c388fe4af50"
+    },
+    {
+      "path": "docs/README_TESTS.md",
+      "size_bytes": 5091,
+      "sha256": "8e34934afcfe8ae6be68b16c1cc07aa55d57535ae207c20275a6c197d87e389b"
+    },
+    {
+      "path": "docs/TRAZABILIDAD_ENTREGA_01.md",
+      "size_bytes": 2848,
+      "sha256": "e59524efdf57cb414c9913d3fe706f6bc1b05af6a8e6d374c72808ac450ca5a2"
+    },
+    {
+      "path": "docs/TRAZABILIDAD_ENTREGA_02.md",
+      "size_bytes": 3890,
+      "sha256": "96825a51a5a667fee9ee17e49c44c1bf8380878585f1030cda84f7c8957e89d4"
+    },
+    {
+      "path": "docs/TRAZABILIDAD_ENTREGA_03.md",
+      "size_bytes": 3440,
+      "sha256": "c85c5baad55b69692576c9d5eeda835748759ad37fbab5dd4cda23548226030c"
+    },
+    {
+      "path": "docs/TRAZABILIDAD_ENTREGA_04.md",
+      "size_bytes": 3383,
+      "sha256": "104bb2f809490ec459434eca50b02b91222680d587e7cbf643419f1bdb75326c"
+    },
+    {
+      "path": "docs/TRAZABILIDAD_ENTREGA_05.md",
+      "size_bytes": 3777,
+      "sha256": "954554e6837d6ec06f23a28aa532b6a0c65d506a57d6fb65bf69f61d8b7c1bb9"
+    },
+    {
+      "path": "docs/TRAZABILIDAD_ENTREGA_06.md",
+      "size_bytes": 3924,
+      "sha256": "e59c1306715180c566855cea84f065dbec812128b9116e930529875192fc4caf"
+    },
+    {
+      "path": "docs/TRAZABILIDAD_ENTREGA_07.md",
+      "size_bytes": 3984,
+      "sha256": "c602d55c511b3a08a283095ca65db8536770cc56250689a4e78f32d59b7103a1"
+    },
+    {
+      "path": "docs/TRAZABILIDAD_ENTREGA_08.md",
+      "size_bytes": 3378,
+      "sha256": "962dec6d8bb4c04293e1889c319186bbaa154002ce567e2f43806c1daf55de6f"
+    },
+    {
+      "path": "docs/TRAZABILIDAD_ENTREGA_09.md",
+      "size_bytes": 2072,
+      "sha256": "f9dd0661185d2cef7109d23d4314685986a36a83dfb8a07a7d57d3615797d99b"
+    },
+    {
+      "path": "docs/TRAZABILIDAD_ENTREGA_10.md",
+      "size_bytes": 2398,
+      "sha256": "b5a9ba0b25788f38e6303f9e18f6fed6b49be77ef7a64ae128178ea5f827f1f8"
+    },
+    {
+      "path": "docs/TRAZABILIDAD_FINAL.md",
+      "size_bytes": 1836,
+      "sha256": "12785f501822778596ba2e96b92d26fc6f981b8afe2dd4674c6df20ce16d858e"
+    },
+    {
+      "path": "docs/prompt_mappings.md",
+      "size_bytes": 9828,
+      "sha256": "907de7d161c7ceb213a90852435468fc1c737b44cbd889622941277d14279230"
+    },
+    {
+      "path": "src/__init__.py",
+      "size_bytes": 62,
+      "sha256": "57124667ffd117e8dfcb790b39d6808f8ea4b4e2c75ed6bc9de974ad4c871a62"
+    },
+    {
+      "path": "src/domain/.gitkeep",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "src/domain/__init__.py",
+      "size_bytes": 1000,
+      "sha256": "d4937ee9659f0968265316616fba1481f3d0a6d78de9d886d59bec15ca67f509"
+    },
+    {
+      "path": "src/domain/enums.py",
+      "size_bytes": 2571,
+      "sha256": "ed3b66c2c727b7f14e9eb9b6c5b828de502a5754b76f1d7b6667980f4307b021"
+    },
+    {
+      "path": "src/domain/factory.py",
+      "size_bytes": 6188,
+      "sha256": "ddf9d1bdcd9e7ea3be126e7e8d0675938f9b8f51bd1102797c02f1ce872fcc15"
+    },
+    {
+      "path": "src/domain/gates.py",
+      "size_bytes": 3795,
+      "sha256": "5c17c3ce2ece25888961c70880b1adb47652b63e769f7ed5d0bcdde2c597c69d"
+    },
+    {
+      "path": "src/domain/incidents.py",
+      "size_bytes": 1380,
+      "sha256": "f24c665bb557286ffe251f9a968b9b33336660095381d20656b9efbe6ec1e7a7"
+    },
+    {
+      "path": "src/domain/resources.py",
+      "size_bytes": 1393,
+      "sha256": "ae4e2c8a5c5797efee4995c1c7f69426e4137247c249f7c7ef0a2b80a131e1c9"
+    },
+    {
+      "path": "src/domain/tasks.py",
+      "size_bytes": 3251,
+      "sha256": "d0b59c4347e019fc7df783a8447423a7dabc64bed71b035f5f58ca56c6922cda"
+    },
+    {
+      "path": "src/domain/transitions.py",
+      "size_bytes": 1266,
+      "sha256": "e5a46f3d878bb9c046edc55a061ade40616ecbf9ab5e1daaeee9d315b99720f7"
+    },
+    {
+      "path": "src/domain/workers.py",
+      "size_bytes": 742,
+      "sha256": "d81229e6a91ac0938a51884e18c75e2210bccdbe9482ed42720b7af99824488f"
+    },
+    {
+      "path": "src/domain/workflow.py",
+      "size_bytes": 5132,
+      "sha256": "64c9cdb3189a8ea0608d3c45035993ff2358901249f202e25a90ec500108e7df"
+    },
+    {
+      "path": "src/orchestration/.gitkeep",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "src/orchestration/__init__.py",
+      "size_bytes": 681,
+      "sha256": "07ed6ddbcbe293000959502a2619adb70d705c75dfd05177b792cf45413e150c"
+    },
+    {
+      "path": "src/orchestration/assignment.py",
+      "size_bytes": 3398,
+      "sha256": "ec78bf212890194c97192a16bc87edf577f54b5ca4ca9a8541d10902fa5235d5"
+    },
+    {
+      "path": "src/orchestration/events.py",
+      "size_bytes": 1401,
+      "sha256": "d39df6f347c6c8c32f03066dabc51ce9a9387a3814f0f6d3a583c7b661b7277c"
+    },
+    {
+      "path": "src/orchestration/executor.py",
+      "size_bytes": 2723,
+      "sha256": "54a56605f71f9bb6677d6dcf6740a5a0607bc8e49a9f2aca05d841a11750f29c"
+    },
+    {
+      "path": "src/orchestration/orchestrator.py",
+      "size_bytes": 7164,
+      "sha256": "8338074bdfd16e031b45b0a6a08bbc89e2b73a48e4f76ec645e56a105a412f87"
+    },
+    {
+      "path": "src/orchestration/queue.py",
+      "size_bytes": 3293,
+      "sha256": "5af82ed392d9d62a96516f9e804b94e5bdb71f94f06ab417f874b25dabd5b475"
+    },
+    {
+      "path": "src/persistence/.gitkeep",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "src/persistence/__init__.py",
+      "size_bytes": 168,
+      "sha256": "be4f0fb52f1f17bc51be2c93861706146820e403cf00f49a2aa05e3148b68fd0"
+    },
+    {
+      "path": "src/persistence/sqlite_repository.py",
+      "size_bytes": 21749,
+      "sha256": "90b850737d3b5f5343dfa91e3fa2dd31d105ca411468d8cd88cb82f9a60c9c4c"
+    },
+    {
+      "path": "src/runtime/.gitkeep",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "src/runtime/__init__.py",
+      "size_bytes": 214,
+      "sha256": "e33a89b07b791fec62317365570e4ecfa9ead48ccafbf230b721d42b5672f316"
+    },
+    {
+      "path": "src/runtime/instances.py",
+      "size_bytes": 20314,
+      "sha256": "dbec354b13f18e903413115c3c74145a54f68c6abef17158e2a4104e0d9eb5d7"
+    },
+    {
+      "path": "src/runtime/trace.py",
+      "size_bytes": 971,
+      "sha256": "5e0c120d348b8e346e04603e1fddfd4e9055b1b21bfe2404e92dd887994cab75"
+    },
+    {
+      "path": "tests/.gitkeep",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "tests/test_domain_model.py",
+      "size_bytes": 1339,
+      "sha256": "bd5ee833976e987cd3039a97b8b9542370c4892088f9d593250a6418347762ba"
+    },
+    {
+      "path": "tests/test_orchestration.py",
+      "size_bytes": 3551,
+      "sha256": "fb8d1ea4f9f802ce88e86c9e7ad9f21ae6871f225d4b758cbe50aea63364ae3e"
+    },
+    {
+      "path": "tests/test_persistence_sqlite.py",
+      "size_bytes": 3937,
+      "sha256": "b19c444650126a10d21685ec6e87f53d6a427c0f6461a9d1d8574fa263313828"
+    },
+    {
+      "path": "tests/test_required_scenarios.py",
+      "size_bytes": 13552,
+      "sha256": "fd325a15ede51e21c8506c4eed83d8d556596face629bebf84c465b8dbdc41bb"
+    },
+    {
+      "path": "tests/test_runtime_engine.py",
+      "size_bytes": 7516,
+      "sha256": "fb2d8e4f9e2a9daac834dff6eec21c9a62ce8f29797af51850c4e0961979fd98"
+    }
+  ]
+}

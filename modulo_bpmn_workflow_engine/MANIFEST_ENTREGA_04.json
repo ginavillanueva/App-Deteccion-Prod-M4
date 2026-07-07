@@ -1,0 +1,26 @@
+{
+  "project": "App Deteccion Prod BPMN Workflow Engine",
+  "delivery": "Entrega 04",
+  "generated_at": "2026-07-06",
+  "approved": [
+    "00_PLAN_EJECUCION_APROBADO.md",
+    "docs/PRD.md",
+    "docs/FSD.md",
+    "src/domain/",
+    "docs/README_DOMAIN_MODEL.md",
+    "PR_implementation/PR_01_domain_model.md"
+  ],
+  "for_review": [
+    "src/runtime/",
+    "docs/README_RUNTIME_ENGINE.md",
+    "PR_implementation/PR_02_runtime_engine.md",
+    "docs/TRAZABILIDAD_ENTREGA_04.md",
+    "tests/test_runtime_engine.py"
+  ],
+  "validation": {
+    "compile": "python -m compileall src",
+    "tests": "python -m unittest discover -s tests",
+    "result": "Ran 9 tests - OK"
+  },
+  "next_expected_approval": "aprobado runtime"
+}
