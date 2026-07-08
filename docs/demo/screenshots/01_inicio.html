@@ -1,0 +1,26 @@
+<html><head><meta charset="utf-8"><style>
+@page { size: 16in 9in; margin: 0; }
+body { margin:0; font-family: Arial, Helvetica, sans-serif; background:#f5f7fb; color:#172033; }
+.header { background: linear-gradient(135deg,#102a43,#1f6feb); color:white; padding: 32px 46px 38px; }
+.header h1 { margin:0; font-size:34px; } .header p { color:#dbeafe; margin:8px 0 0; font-size:17px; max-width:1000px; }
+.badges span { display:inline-block; margin:14px 8px 0 0; padding:7px 12px; border-radius:999px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.3); font-size:12px; }
+.main { padding: 26px 46px; }
+.nav { margin-top:-34px; padding:0 46px; } .nav span { display:inline-block; padding:10px 14px; border-radius:999px; background:white; box-shadow:0 7px 18px rgba(15,23,42,.12); margin-right:8px; font-weight:700; } .nav .active { background:#1f6feb; color:white; }
+.grid { display:grid; grid-template-columns: repeat(12,1fr); gap:18px; }
+.card { background:#fff; border:1px solid #d8dee9; border-radius:16px; padding:18px; box-shadow:0 10px 25px rgba(15,23,42,.08); }
+.span4 { grid-column:span 4;} .span5{grid-column:span 5;} .span6{grid-column:span 6;} .span7{grid-column:span 7;} .span8{grid-column:span 8;} .span12{grid-column:span 12;}
+h2,h3{ margin:0 0 10px; } .small{ color:#667085; font-size:13px; }
+label{ display:block; font-size:12px; color:#667085; font-weight:700; margin:10px 0 5px; }
+input,select,textarea{ width:100%; padding:9px 11px; border:1px solid #d8dee9; border-radius:12px; font-size:13px; background:#fff; }
+textarea{ min-height:58px; } .formgrid{ display:grid; grid-template-columns:repeat(2,1fr); gap:0 14px; }
+.btn{ display:inline-block; background:#1f6feb; color:white; padding:12px 16px; border-radius:12px; font-weight:800; margin-top:12px; }
+.status{ padding:10px 12px; border-radius:12px; margin-top:10px; background:#eff6ff; color:#1e40af; font-weight:700; }
+.metric{ padding:13px; border:1px solid #d8dee9; border-radius:14px; background:#f8fafc; } .value{font-size:28px; font-weight:900;} .label{font-size:12px; color:#667085; font-weight:700; text-transform:uppercase;}
+.case{ border:1px solid #d8dee9; border-radius:14px; padding:12px; background:#fff; margin-bottom:10px; } .risk{color:#b45309; font-weight:900;} .ok{color:#047857; font-weight:900;} .danger{color:#b91c1c; font-weight:900;}
+pre{ background:#101828; color:#e5e7eb; padding:12px; border-radius:14px; font-size:11px; white-space:pre-wrap; max-height:460px; }
+table{ width:100%; border-collapse:collapse; font-size:12px;} th,td{border-bottom:1px solid #d8dee9; padding:8px; text-align:left;} th{color:#667085; text-transform:uppercase; font-size:11px;}
+.flow div{display:inline-block; background:#eef2ff; border:1px solid #c7d2fe; border-radius:12px; padding:12px; margin:8px; font-weight:800;}
+</style></head><body>
+    <div class="header"><h1>App Detección Prod · Demo aplicada de 2 features</h1><p>Vista inicial del flujo aplicado para docente: registro, cálculo, validación y dashboard.</p><div class="badges"><span>FEAT-001 Registro visual</span><span>FEAT-002 Supervisión + Dashboard</span><span>Trazabilidad FSD→Código→Tests</span><span>Cobertura ≥90%</span></div></div>
+    <div class="nav"><span class="active">Inicio</span><span class="">Registro mercaderista</span><span class="">Bandeja supervisor</span><span class="">Dashboard gerencial</span><span class="">Eventos y trazabilidad</span></div><div class="main">
+<div class="grid"><div class="card span12"><h2>Qué debe observar el docente</h2><p>La demo deja de ser solo una API y se convierte en una app aplicada: el mercaderista registra un caso, el supervisor valida y gerencia ve KPIs.</p><div class="flow"><div>Registrar</div><div>Calcular riesgo</div><div>Auditar precio</div><div>Validar</div><div>Medir KPIs</div></div></div><div class="card span6"><h3>FEAT-001</h3><p>Formulario estructurado para reemplazar WhatsApp, fotos dispersas y Excel.</p></div><div class="card span6"><h3>FEAT-002</h3><p>Bandeja de supervisión y dashboard gerencial con indicadores accionables.</p></div></div></div></body></html>

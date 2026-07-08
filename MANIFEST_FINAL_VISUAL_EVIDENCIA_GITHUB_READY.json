@@ -1,0 +1,25 @@
+{
+  "project": "App Deteccion Prod",
+  "release": "4.2.0-demo-visual-evidencia-dashboard",
+  "audience": "docente/publico evaluador",
+  "features": [
+    "FEAT-001 Registro visual mercaderista con evidencia fotografica",
+    "FEAT-002 Supervision + dashboard gerencial avanzado"
+  ],
+  "traceability": "PRD -> FSD -> DD -> ADR -> Prompt -> Codigo -> Tests -> Demo visual",
+  "validated_local_flow": [
+    "instalacion dependencias",
+    "ejecucion servidor",
+    "registro caso con evidencia",
+    "validacion supervisor",
+    "dashboard nacional/regional con filtros",
+    "eventos y trazabilidad",
+    "50 tests passed",
+    "100% coverage"
+  ],
+  "coverage": "100%",
+  "tests": "50 passed",
+  "minimum_coverage_rule": ">=90%",
+  "recommended_branch": "release/4.2.0-demo-visual-evidencia-dashboard",
+  "created_at": "2026-07-08"
+}

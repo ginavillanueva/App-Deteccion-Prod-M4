@@ -1,0 +1,23 @@
+..................................................                       [100%]
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.13.5-final-0 ________________
+
+Name                                                    Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------------------
+src/app_deteccion/adapters/api.py                          78      0   100%
+src/app_deteccion/adapters/web_ui.py                        7      0   100%
+src/app_deteccion/application/ports.py                      6      0   100%
+src/app_deteccion/application/use_cases.py                 71      0   100%
+src/app_deteccion/domain/entities.py                      107      0   100%
+src/app_deteccion/domain/enums.py                          15      0   100%
+src/app_deteccion/domain/events.py                         13      0   100%
+src/app_deteccion/domain/exceptions.py                      1      0   100%
+src/app_deteccion/domain/guardrails.py                      6      0   100%
+src/app_deteccion/domain/scoring.py                        51      0   100%
+src/app_deteccion/infrastructure/memory.py                 27      0   100%
+src/app_deteccion/infrastructure/sqlite_repository.py      71      0   100%
+src/app_deteccion/main.py                                   2      0   100%
+-------------------------------------------------------------------------------------
+TOTAL                                                     455      0   100%
+Required test coverage of 90.0% reached. Total coverage: 100.00%
+50 passed in 1.62s

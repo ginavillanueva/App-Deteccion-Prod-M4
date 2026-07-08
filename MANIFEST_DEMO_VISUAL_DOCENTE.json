@@ -1,0 +1,11 @@
+{
+  "package": "App Detección Prod - Demo visual docente/público",
+  "version": "4.1.0-visual-dashboard",
+  "features": [
+    "FEAT-001 Registro visual de mercaderista",
+    "FEAT-002 Supervisión + dashboard gerencial avanzado"
+  ],
+  "ui": "http://127.0.0.1:8000/app",
+  "tests": "50 passed, coverage 100%",
+  "notes": "Documentación sanitizada para docente/público evaluador; sin instrucciones dirigidas a la estudiante."
+}
