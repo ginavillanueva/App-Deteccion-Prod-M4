@@ -1,0 +1,17 @@
+flowchart TD
+    START((Inicio)) --> A[DetectProductCase\nDetectar producto próximo a vencer]
+    A --> B[ValidateEvidence\nValidar evidencia y datos]
+    B --> SPLIT{Split paralelo}
+    SPLIT --> C[ClassifyRisk\nClasificar riesgo]
+    SPLIT --> D[ValidatePriceData\nValidar precio]
+    C --> JOIN{Join AND}
+    D --> JOIN
+    JOIN --> E[DecideCommercialAction\nDefinir acción comercial]
+    E --> F[ApprovePriceChange\nAprobar cambio de precio]
+    F --> G[ExecuteRetailAction\nEjecutar acción en tienda]
+    G --> H[SupervisorReview\nRevisión del supervisor]
+    H --> I[CloseCaseAndUpdateDashboard\nCerrar caso y actualizar dashboard]
+    I --> END((Fin exitoso))
+    H -. evidencia incorrecta .-> B
+    G -. error de precio o ejecución .-> B
+    H -. caso no recuperable .-> ERROR((Fin con error))

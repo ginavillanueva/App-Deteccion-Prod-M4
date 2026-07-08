@@ -1,0 +1,14 @@
+flowchart TD
+    A[Task in progress] --> B{¿Resultado válido?}
+    B -->|Sí| C[CompleteTask]
+    C --> D[EvaluateNextTasks]
+    D --> E[MoveForward]
+    B -->|No| F[RegisterIncident]
+    F --> G{¿Tiene BACKWARD?}
+    G -->|Sí| H[ResetTargetTask]
+    H --> I[RetryCounter + 1]
+    I --> J{¿Superó reintentos?}
+    J -->|No| K[ReturnToPreviousTask]
+    K --> A
+    J -->|Sí| L[CloseWithError]
+    G -->|No| L

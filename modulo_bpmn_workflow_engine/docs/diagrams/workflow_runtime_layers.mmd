@@ -1,0 +1,8 @@
+flowchart LR
+    DOCS[docs/FSD.md] --> FACTORY[src/domain/factory.py]
+    FACTORY --> DOMAIN[src/domain]
+    DOMAIN --> RUNTIME[src/runtime]
+    RUNTIME --> ORCH[src/orchestration]
+    RUNTIME --> DB[src/persistence]
+    ORCH --> TESTS[tests]
+    DB --> TESTS
