@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>App Detección Prod — Workflow BPMN animado</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --card: #1f2937;
+      --muted: #94a3b8;
+      --text: #f8fafc;
+      --line: #475569;
+      --active: #38bdf8;
+      --done: #22c55e;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --purple: #a78bfa;
+      --shadow: rgba(0,0,0,.35);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1e293b, var(--bg));
+      color: var(--text);
+    }
+
+    header {
+      padding: 28px 32px 16px;
+      border-bottom: 1px solid rgba(148, 163, 184, .18);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(24px, 3vw, 38px);
+      letter-spacing: -.03em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      max-width: 980px;
+      line-height: 1.5;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(320px, .75fr);
+      gap: 20px;
+      padding: 22px;
+    }
+
+    @media (max-width: 980px) {
+      main { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      background: rgba(15, 23, 42, .78);
+      border: 1px solid rgba(148, 163, 184, .2);
+      border-radius: 20px;
+      box-shadow: 0 20px 50px var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 18px 20px;
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      background: rgba(15, 23, 42, .55);
+      border-bottom: 1px solid rgba(148, 163, 184, .16);
+    }
+
+    .panel-header h2 { margin: 0; font-size: 18px; }
+    .small { color: var(--muted); font-size: 13px; }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    button, select {
+      appearance: none;
+      border: 1px solid rgba(148, 163, 184, .35);
+      background: #172033;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform .15s ease, border-color .2s ease, background .2s ease;
+    }
+
+    button:hover, select:hover { transform: translateY(-1px); border-color: var(--active); }
+    button.primary { background: linear-gradient(135deg, #0284c7, #2563eb); border-color: #38bdf8; }
+    button.danger { background: rgba(239, 68, 68, .18); border-color: rgba(239, 68, 68, .6); }
+    button:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+
+    .canvas {
+      padding: 26px 24px 30px;
+      overflow-x: auto;
+    }
+
+    .flow {
+      min-width: 960px;
+      display: grid;
+      grid-template-columns: 150px 80px 170px 90px 190px 90px 170px 80px 170px;
+      grid-template-rows: auto 60px auto 60px auto;
+      align-items: center;
+      justify-items: center;
+    }
+
+    .node {
+      width: 158px;
+      min-height: 92px;
+      padding: 14px 12px;
+      border-radius: 18px;
+      border: 2px solid rgba(148, 163, 184, .28);
+      background: linear-gradient(180deg, rgba(30, 41, 59, .98), rgba(15, 23, 42, .96));
+      text-align: center;
+      position: relative;
+      transition: all .35s ease;
+      box-shadow: 0 14px 30px rgba(0,0,0,.28);
+    }
+
+    .node .index {
+      display: inline-flex;
+      width: 26px;
+      height: 26px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(148, 163, 184, .18);
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .node .label {
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .node .role {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 7px;
+      line-height: 1.2;
+    }
+
+    .node.start, .node.end { border-radius: 999px; width: 120px; min-height: 66px; }
+
+    .node.active {
+      border-color: var(--active);
+      transform: scale(1.05);
+      box-shadow: 0 0 0 5px rgba(56, 189, 248, .12), 0 20px 48px rgba(56, 189, 248, .18);
+    }
+    .node.active .index { background: var(--active); color: #001827; }
+
+    .node.done {
+      border-color: var(--done);
+      background: linear-gradient(180deg, rgba(20, 83, 45, .8), rgba(15, 23, 42, .96));
+    }
+    .node.done .index { background: var(--done); color: #052e16; }
+
+    .node.error {
+      border-color: var(--error);
+      animation: pulseError 900ms ease-in-out 2;
+    }
+    .node.warning {
+      border-color: var(--warning);
+      box-shadow: 0 0 0 5px rgba(245, 158, 11, .11), 0 18px 44px rgba(245, 158, 11, .15);
+    }
+
+    @keyframes pulseError {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); box-shadow: 0 0 0 8px rgba(239, 68, 68, .18); }
+    }
+
+    .arrow {
+      width: 100%;
+      height: 4px;
+      background: var(--line);
+      position: relative;
+      border-radius: 999px;
+      transition: background .3s ease;
+    }
+    .arrow::after {
+      content: "";
+      position: absolute;
+      right: -2px;
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+      width: 12px;
+      height: 12px;
+      border-top: 4px solid var(--line);
+      border-right: 4px solid var(--line);
+      transition: border-color .3s ease;
+    }
+    .arrow.active { background: var(--active); animation: flowLine 1s linear infinite; }
+    .arrow.active::after { border-color: var(--active); }
+    .arrow.done { background: var(--done); }
+    .arrow.done::after { border-color: var(--done); }
+
+    @keyframes flowLine {
+      0% { box-shadow: 0 0 0 rgba(56,189,248,0); }
+      50% { box-shadow: 0 0 22px rgba(56,189,248,.9); }
+      100% { box-shadow: 0 0 0 rgba(56,189,248,0); }
+    }
+
+    .split-label, .join-label {
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      background: rgba(167, 139, 250, .16);
+      border: 1px solid rgba(167, 139, 250, .5);
+      color: #ddd6fe;
+    }
+
+    .vertical-line {
+      width: 4px;
+      height: 70px;
+      background: var(--line);
+      border-radius: 999px;
+    }
+    .vertical-line.active { background: var(--active); box-shadow: 0 0 22px rgba(56,189,248,.65); }
+    .vertical-line.done { background: var(--done); }
+
+    .side {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .status-card { padding: 18px 20px; }
+    .status-title { margin: 0 0 6px; color: var(--muted); font-size: 13px; }
+    .status-value { margin: 0; font-size: 22px; font-weight: 800; }
+    .status-sub { margin: 7px 0 0; color: var(--muted); font-size: 13px; line-height: 1.4; }
+
+    .progress-wrap {
+      margin-top: 16px;
+      height: 10px;
+      background: rgba(148, 163, 184, .18);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--active), var(--done));
+      transition: width .4s ease;
+    }
+
+    .log {
+      max-height: 420px;
+      overflow: auto;
+      padding: 14px 20px 20px;
+    }
+
+    .log-entry {
+      display: grid;
+      grid-template-columns: 78px 1fr;
+      gap: 10px;
+      padding: 11px 0;
+      border-bottom: 1px solid rgba(148, 163, 184, .14);
+      font-size: 13px;
+    }
+    .log-time { color: var(--muted); font-variant-numeric: tabular-nums; }
+    .log-message strong { color: #e0f2fe; }
+    .tag {
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 2px 7px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-right: 6px;
+      background: rgba(148, 163, 184, .16);
+      color: var(--muted);
+    }
+    .tag.ok { background: rgba(34, 197, 94, .16); color: #bbf7d0; }
+    .tag.warn { background: rgba(245, 158, 11, .16); color: #fde68a; }
+    .tag.err { background: rgba(239, 68, 68, .16); color: #fecaca; }
+
+    .legend {
+      padding: 14px 20px 20px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .legend-item { color: var(--muted); font-size: 13px; display: flex; align-items: center; gap: 8px; }
+    .dot { width: 12px; height: 12px; border-radius: 999px; display: inline-block; }
+    .dot.active { background: var(--active); }
+    .dot.done { background: var(--done); }
+    .dot.warn { background: var(--warning); }
+    .dot.err { background: var(--error); }
+
+    .footer-note {
+      padding: 0 22px 24px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    code { color: #bae6fd; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>App Detección Prod — Workflow BPMN animado</h1>
+    <p class="subtitle">
+      Demo visual para defensa: muestra paso a paso cómo fluye un caso de producto próximo a vencer desde la detección en campo hasta el cierre y actualización del dashboard.
+    </p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <h2>Flujo principal ejecutable</h2>
+          <div class="small">Cada caja visual corresponde a una <code>Task</code> implementada en <code>src/domain/factory.py</code>.</div>
+        </div>
+        <div class="controls">
+          <select id="speed">
+            <option value="1400">Velocidad normal</option>
+            <option value="850">Rápida</option>
+            <option value="2200">Lenta para explicar</option>
+          </select>
+          <button class="primary" id="startBtn">▶ Ejecutar flujo</button>
+          <button id="incidentBtn">⚠ Simular incidente</button>
+          <button class="danger" id="resetBtn">↺ Reiniciar</button>
+        </div>
+      </div>
+
+      <div class="canvas">
+        <div class="flow" id="flow">
+          <div class="node start" data-step="start" style="grid-column:1; grid-row:3"><div class="index">0</div><div class="label">Start</div><div class="role">Caso creado</div></div>
+          <div class="arrow" data-arrow="start-detect" style="grid-column:2; grid-row:3"></div>
+          <div class="node" data-step="detect" style="grid-column:3; grid-row:3"><div class="index">1</div><div class="label">DetectProductCase</div><div class="role">Mercaderista registra foto, vencimiento, precio y cantidad</div></div>
+          <div class="arrow" data-arrow="detect-validate" style="grid-column:4; grid-row:3"></div>
+          <div class="node" data-step="validate" style="grid-column:5; grid-row:3"><div class="index">2</div><div class="label">ValidateEvidence</div><div class="role">Supervisor valida evidencia y datos base</div></div>
+          <div class="arrow" data-arrow="validate-split" style="grid-column:6; grid-row:3"></div>
+          <div class="split-label" style="grid-column:7; grid-row:3">SPLIT</div>
+          <div class="vertical-line" data-arrow="split-up" style="grid-column:7; grid-row:2"></div>
+          <div class="vertical-line" data-arrow="split-down" style="grid-column:7; grid-row:4"></div>
+          <div class="node" data-step="risk" style="grid-column:9; grid-row:1"><div class="index">3A</div><div class="label">ClassifyRisk</div><div class="role">Sistema / IA clasifica riesgo BAJO, MEDIO o ALTO</div></div>
+          <div class="node" data-step="price" style="grid-column:9; grid-row:5"><div class="index">3B</div><div class="label">ValidatePriceData</div><div class="role">Valida precio actual, precio propuesto e impacto</div></div>
+        </div>
+
+        <div class="flow" style="margin-top: 26px; min-width: 960px; grid-template-columns: 150px 80px 170px 80px 170px 80px 170px 80px 170px; grid-template-rows:auto;">
+          <div class="join-label" style="grid-column:1; grid-row:1">JOIN AND</div>
+          <div class="arrow" data-arrow="join-decide" style="grid-column:2; grid-row:1"></div>
+          <div class="node" data-step="decide" style="grid-column:3; grid-row:1"><div class="index">4</div><div class="label">DecideCommercialAction</div><div class="role">Vendedor define descuento, bandeo, retiro o monitoreo</div></div>
+          <div class="arrow" data-arrow="decide-approve" style="grid-column:4; grid-row:1"></div>
+          <div class="node" data-step="approve" style="grid-column:5; grid-row:1"><div class="index">5</div><div class="label">ApprovePriceChange</div><div class="role">Aprobación humana si existe cambio de precio</div></div>
+          <div class="arrow" data-arrow="approve-execute" style="grid-column:6; grid-row:1"></div>
+          <div class="node" data-step="execute" style="grid-column:7; grid-row:1"><div class="index">6</div><div class="label">ExecuteRetailAction</div><div class="role">Mercaderista ejecuta acción en sala</div></div>
+          <div class="arrow" data-arrow="execute-review" style="grid-column:8; grid-row:1"></div>
+          <div class="node" data-step="review" style="grid-column:9; grid-row:1"><div class="index">7</div><div class="label">SupervisorReview</div><div class="role">Revisión final y control de errores</div></div>
+        </div>
+
+        <div class="flow" style="margin-top: 26px; min-width: 760px; grid-template-columns: 170px 110px 190px 110px 140px; grid-template-rows:auto;">
+          <div class="node end" data-step="close" style="grid-column:1; grid-row:1"><div class="index">8</div><div class="label">CloseCaseAndUpdateDashboard</div><div class="role">Cierre y KPI actualizado</div></div>
+          <div class="arrow" data-arrow="review-close" style="grid-column:2; grid-row:1"></div>
+          <div class="node end" data-step="end" style="grid-column:3; grid-row:1"><div class="index">9</div><div class="label">End</div><div class="role">Caso trazado</div></div>
+          <div class="arrow" data-arrow="incident-return" style="grid-column:4; grid-row:1"></div>
+          <div class="node warning" data-step="rework" style="grid-column:5; grid-row:1"><div class="index">↩</div><div class="label">Rework</div><div class="role">Si hay error, vuelve a ValidateEvidence</div></div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="side">
+      <section class="panel status-card">
+        <p class="status-title">Estado actual</p>
+        <p class="status-value" id="currentState">Listo para iniciar</p>
+        <p class="status-sub" id="currentDescription">Presiona “Ejecutar flujo” para animar el proceso normal o “Simular incidente” para ver un retorno controlado.</p>
+        <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header"><h2>Bitácora de ejecución</h2><span class="small">Trazabilidad visual</span></div>
+        <div class="log" id="log"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header"><h2>Leyenda</h2></div>
+        <div class="legend">
+          <div class="legend-item"><span class="dot active"></span> Tarea en ejecución</div>
+          <div class="legend-item"><span class="dot done"></span> Tarea completada</div>
+          <div class="legend-item"><span class="dot warn"></span> Rework / retorno</div>
+          <div class="legend-item"><span class="dot err"></span> Incidente</div>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <p class="footer-note">
+    Nota para defensa: esta demo es una visualización didáctica del flujo. La lógica base está implementada en <code>src/domain/factory.py</code>, se ejecuta en <code>src/runtime/instances.py</code> y se valida con los tests en <code>tests/test_required_scenarios.py</code>.
+  </p>
+
+  <script>
+    const normalSequence = [
+      ['start', 'Caso creado en el motor'],
+      ['detect', 'Mercaderista registra producto, foto, vencimiento, precio y cantidad'],
+      ['validate', 'Supervisor valida evidencia y datos base'],
+      ['risk', 'Sistema clasifica riesgo del producto'],
+      ['price', 'Sistema valida precio actual y precio propuesto'],
+      ['decide', 'Vendedor decide acción comercial'],
+      ['approve', 'Se aprueba cambio de precio con control humano'],
+      ['execute', 'Mercaderista ejecuta la acción en sala'],
+      ['review', 'Supervisor revisa la ejecución'],
+      ['close', 'Caso cerrado y dashboard actualizado'],
+      ['end', 'Workflow finalizado con trazabilidad completa']
+    ];
+
+    const incidentSequence = [
+      ['start', 'Caso creado en el motor'],
+      ['detect', 'Mercaderista registra producto, foto, vencimiento, precio y cantidad'],
+      ['validate', 'Supervisor valida evidencia inicial'],
+      ['risk', 'Sistema clasifica riesgo del producto'],
+      ['price', 'Sistema valida precio actual y precio propuesto'],
+      ['decide', 'Vendedor decide acción comercial'],
+      ['approve', 'Se aprueba cambio de precio con control humano'],
+      ['execute', 'Se detecta inconsistencia en ejecución o precio aplicado', 'err'],
+      ['rework', 'Incidente abierto: el caso vuelve a ValidateEvidence', 'warn'],
+      ['validate', 'Supervisor revalida evidencia corregida'],
+      ['execute', 'Mercaderista corrige y ejecuta nuevamente'],
+      ['review', 'Supervisor aprueba la corrección'],
+      ['close', 'Caso cerrado y dashboard actualizado'],
+      ['end', 'Workflow finalizado con trazabilidad completa']
+    ];
+
+    const arrowsByStep = {
+      detect: ['start-detect'],
+      validate: ['detect-validate', 'incident-return'],
+      risk: ['validate-split', 'split-up'],
+      price: ['validate-split', 'split-down'],
+      decide: ['join-decide'],
+      approve: ['decide-approve'],
+      execute: ['approve-execute'],
+      review: ['execute-review'],
+      close: ['review-close'],
+      end: ['review-close']
+    };
+
+    const nodes = [...document.querySelectorAll('.node')];
+    const arrows = [...document.querySelectorAll('.arrow, .vertical-line')];
+    const log = document.getElementById('log');
+    const progressBar = document.getElementById('progressBar');
+    const currentState = document.getElementById('currentState');
+    const currentDescription = document.getElementById('currentDescription');
+    const startBtn = document.getElementById('startBtn');
+    const incidentBtn = document.getElementById('incidentBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const speed = document.getElementById('speed');
+    let running = false;
+    let timers = [];
+
+    function reset() {
+      timers.forEach(clearTimeout);
+      timers = [];
+      running = false;
+      nodes.forEach(n => n.classList.remove('active', 'done', 'error'));
+      arrows.forEach(a => a.classList.remove('active', 'done'));
+      log.innerHTML = '';
+      progressBar.style.width = '0%';
+      currentState.textContent = 'Listo para iniciar';
+      currentDescription.textContent = 'Presiona “Ejecutar flujo” para animar el proceso normal o “Simular incidente” para ver un retorno controlado.';
+      startBtn.disabled = false;
+      incidentBtn.disabled = false;
+    }
+
+    function setNode(step, status) {
+      const node = document.querySelector(`[data-step="${step}"]`);
+      if (!node) return;
+      node.classList.remove('active', 'done', 'error');
+      if (status) node.classList.add(status);
+    }
+
+    function markArrows(step, status) {
+      (arrowsByStep[step] || []).forEach(id => {
+        const arrow = document.querySelector(`[data-arrow="${id}"]`);
+        if (!arrow) return;
+        arrow.classList.remove('active', 'done');
+        arrow.classList.add(status);
+      });
+    }
+
+    function addLog(message, type = 'ok') {
+      const time = new Date().toLocaleTimeString('es-BO', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      const tag = type === 'err' ? 'INCIDENTE' : type === 'warn' ? 'REWORK' : 'OK';
+      const cls = type === 'err' ? 'err' : type === 'warn' ? 'warn' : 'ok';
+      entry.innerHTML = `<div class="log-time">${time}</div><div class="log-message"><span class="tag ${cls}">${tag}</span>${message}</div>`;
+      log.prepend(entry);
+    }
+
+    function run(sequence) {
+      if (running) return;
+      reset();
+      running = true;
+      startBtn.disabled = true;
+      incidentBtn.disabled = true;
+      const delay = Number(speed.value);
+      sequence.forEach(([step, message, type], index) => {
+        const t = setTimeout(() => {
+          nodes.forEach(n => n.classList.remove('active'));
+          arrows.forEach(a => a.classList.remove('active'));
+          if (index > 0) {
+            const previous = sequence[index - 1][0];
+            setNode(previous, sequence[index - 1][2] === 'err' ? 'error' : 'done');
+            markArrows(step, 'done');
+          }
+          setNode(step, type === 'err' ? 'error' : type === 'warn' ? 'warning' : 'active');
+          markArrows(step, type === 'warn' ? 'active' : 'active');
+          currentState.textContent = step;
+          currentDescription.textContent = message;
+          progressBar.style.width = `${Math.round(((index + 1) / sequence.length) * 100)}%`;
+          addLog(`<strong>${step}</strong>: ${message}`, type || 'ok');
+          if (index === sequence.length - 1) {
+            setTimeout(() => {
+              setNode(step, 'done');
+              running = false;
+              startBtn.disabled = false;
+              incidentBtn.disabled = false;
+              currentState.textContent = 'Workflow completado';
+              currentDescription.textContent = 'El caso terminó con trazabilidad completa y dashboard actualizado.';
+            }, delay * .55);
+          }
+        }, index * delay);
+        timers.push(t);
+      });
+    }
+
+    startBtn.addEventListener('click', () => run(normalSequence));
+    incidentBtn.addEventListener('click', () => run(incidentSequence));
+    resetBtn.addEventListener('click', reset);
+    reset();
+  </script>
+</body>
+</html>
