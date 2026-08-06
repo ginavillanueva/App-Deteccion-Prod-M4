@@ -2,3 +2,6 @@
 .env
 __pycache__/
 *.py[cod]
+
+# Base SQLite generada para la demostracion
+modulo_bpmn_workflow_engine/data/*.db
