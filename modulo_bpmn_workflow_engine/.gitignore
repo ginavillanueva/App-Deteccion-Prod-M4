@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Entorno virtual
+.venv/
+venv/
+
+# Configuración local / secretos
+.env
+.streamlit/secrets.toml
+
+# Bases y temporales generables
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE / sistema
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Build / logs
+build/
+dist/
+*.log
