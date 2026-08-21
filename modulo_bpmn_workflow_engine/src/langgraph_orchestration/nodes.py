@@ -1,14 +1,21 @@
 """
 Nodos puros iniciales de LangGraph para App Detección Prod.
 
-En esta primera etapa los nodos NO utilizan:
-- Ollama
-- MCP
-- SQLite
-- checkpoints
+Responsabilidades:
 
-Su objetivo es validar la entrada y clasificar la intención
-de negocio de forma determinística y verificable.
+- validar la entrada;
+- aplicar guardrails;
+- clasificar la intención de negocio;
+- producir trazabilidad explícita;
+- preparar el routing posterior de LangGraph.
+
+La clasificación es deliberadamente determinística.
+
+Este módulo NO consulta:
+
+- Ollama;
+- MCP;
+- SQLite.
 """
 
 from __future__ import annotations
@@ -17,27 +24,41 @@ import re
 import unicodedata
 from typing import Any
 
-from .state import EstadoDeteccion, IntentType, nueva_traza
+from .state import (
+    EstadoDeteccion,
+    IntentType,
+    nueva_traza,
+)
 
 
 # ============================================================
 # UTILIDADES
 # ============================================================
 
-def _normalizar_texto(texto: str) -> str:
+def _normalizar_texto(
+    texto: str,
+) -> str:
     """
-    Convierte texto a minúsculas, elimina tildes y normaliza espacios.
+    Convierte texto a minúsculas,
+    elimina tildes y normaliza espacios.
     """
 
     texto = texto.strip().lower()
 
     texto = "".join(
         caracter
-        for caracter in unicodedata.normalize("NFD", texto)
+        for caracter in unicodedata.normalize(
+            "NFD",
+            texto,
+        )
         if unicodedata.category(caracter) != "Mn"
     )
 
-    texto = re.sub(r"\s+", " ", texto)
+    texto = re.sub(
+        r"\s+",
+        " ",
+        texto,
+    )
 
     return texto
 
@@ -47,10 +68,14 @@ def _contiene_alguno(
     patrones: tuple[str, ...],
 ) -> bool:
     """
-    Indica si al menos uno de los patrones aparece en el texto.
+    Devuelve True si alguno de los patrones
+    aparece en el texto.
     """
 
-    return any(patron in texto for patron in patrones)
+    return any(
+        patron in texto
+        for patron in patrones
+    )
 
 
 # ============================================================
@@ -110,6 +135,13 @@ PATRONES_ACCION = (
 )
 
 
+PATRONES_AUDITORIA_COMPLETA = (
+    "auditoria completa",
+    "auditoria integral",
+    "revision completa",
+)
+
+
 # ============================================================
 # NODO 1 — VALIDAR ENTRADA
 # ============================================================
@@ -118,20 +150,26 @@ def validar_entrada(
     estado: EstadoDeteccion,
 ) -> dict[str, Any]:
     """
-    Guardrail determinístico de entrada.
-
-    Se ejecuta antes de cualquier llamada a un modelo.
+    Guardrail determinístico.
 
     Valida:
     - pregunta vacía;
     - intentos explícitos de prompt injection.
 
-    Las consultas fuera del dominio no se bloquean aquí:
-    serán clasificadas posteriormente como OTRO.
+    Las consultas fuera del dominio no se bloquean.
+    Posteriormente pueden clasificarse como OTRO.
     """
 
-    pregunta_original = estado.get("pregunta", "")
+    pregunta_original = estado.get(
+        "pregunta",
+        "",
+    )
+
     pregunta = pregunta_original.strip()
+
+    # --------------------------------------------------------
+    # PREGUNTA VACÍA
+    # --------------------------------------------------------
 
     if not pregunta:
         return {
@@ -143,12 +181,20 @@ def validar_entrada(
             "traza": nueva_traza(
                 nodo="validar_entrada",
                 tipo="guardrail",
-                mensaje="Consulta bloqueada: pregunta vacía.",
+                mensaje=(
+                    "Consulta bloqueada: pregunta vacía."
+                ),
                 motivo="PREGUNTA_VACIA",
             ),
         }
 
-    pregunta_normalizada = _normalizar_texto(pregunta)
+    pregunta_normalizada = _normalizar_texto(
+        pregunta
+    )
+
+    # --------------------------------------------------------
+    # PROMPT INJECTION
+    # --------------------------------------------------------
 
     if _contiene_alguno(
         pregunta_normalizada,
@@ -172,13 +218,19 @@ def validar_entrada(
             ),
         }
 
+    # --------------------------------------------------------
+    # ENTRADA VÁLIDA
+    # --------------------------------------------------------
+
     return {
         "bloqueado": False,
         "problema": "",
         "traza": nueva_traza(
             nodo="validar_entrada",
             tipo="validacion",
-            mensaje="Entrada validada correctamente.",
+            mensaje=(
+                "Entrada validada correctamente."
+            ),
         ),
     }
 
@@ -191,20 +243,34 @@ def clasificar_intencion(
     estado: EstadoDeteccion,
 ) -> dict[str, Any]:
     """
-    Clasifica la consulta dentro del dominio de App Detección Prod.
-
-    Esta primera versión es deliberadamente determinística.
-    No utiliza LLM.
+    Clasifica la consulta dentro del dominio
+    de App Detección Prod.
 
     Intenciones:
+
     - VENCIMIENTO
     - CAMBIO_PRECIO
     - ACCION_COMERCIAL
     - AUDITORIA_COMPLETA
     - OTRO
+
+    AUDITORIA_COMPLETA se detecta de dos formas:
+
+    1. La consulta contiene dos o más categorías.
+    2. La consulta dice explícitamente:
+       "auditoría completa",
+       "auditoría integral"
+       o "revisión completa".
     """
 
-    if estado.get("bloqueado", False):
+    # --------------------------------------------------------
+    # CONSULTA BLOQUEADA
+    # --------------------------------------------------------
+
+    if estado.get(
+        "bloqueado",
+        False,
+    ):
         return {
             "intencion": "OTRO",
             "traza": nueva_traza(
@@ -217,9 +283,20 @@ def clasificar_intencion(
             ),
         }
 
+    # --------------------------------------------------------
+    # NORMALIZACIÓN
+    # --------------------------------------------------------
+
     pregunta = _normalizar_texto(
-        estado.get("pregunta", "")
+        estado.get(
+            "pregunta",
+            "",
+        )
     )
+
+    # --------------------------------------------------------
+    # DETECCIÓN DE CATEGORÍAS
+    # --------------------------------------------------------
 
     solicita_vencimiento = _contiene_alguno(
         pregunta,
@@ -236,6 +313,17 @@ def clasificar_intencion(
         PATRONES_ACCION,
     )
 
+    solicita_auditoria_explicita = (
+        _contiene_alguno(
+            pregunta,
+            PATRONES_AUDITORIA_COMPLETA,
+        )
+    )
+
+    # --------------------------------------------------------
+    # NÚMERO DE CATEGORÍAS
+    # --------------------------------------------------------
+
     categorias_detectadas = sum(
         (
             solicita_vencimiento,
@@ -244,9 +332,16 @@ def clasificar_intencion(
         )
     )
 
+    # --------------------------------------------------------
+    # CLASIFICACIÓN
+    # --------------------------------------------------------
+
     intencion: IntentType
 
-    if categorias_detectadas >= 2:
+    if (
+        solicita_auditoria_explicita
+        or categorias_detectadas >= 2
+    ):
         intencion = "AUDITORIA_COMPLETA"
 
     elif solicita_vencimiento:
@@ -261,6 +356,10 @@ def clasificar_intencion(
     else:
         intencion = "OTRO"
 
+    # --------------------------------------------------------
+    # RESULTADO
+    # --------------------------------------------------------
+
     return {
         "intencion": intencion,
         "traza": nueva_traza(
@@ -272,6 +371,11 @@ def clasificar_intencion(
             vencimiento=solicita_vencimiento,
             cambio_precio=solicita_precio,
             accion_comercial=solicita_accion,
-            categorias_detectadas=categorias_detectadas,
+            auditoria_explicita=(
+                solicita_auditoria_explicita
+            ),
+            categorias_detectadas=(
+                categorias_detectadas
+            ),
         ),
     }

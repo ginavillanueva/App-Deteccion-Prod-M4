@@ -1,27 +1,33 @@
 """
 Extracción determinística de contexto para App Detección Prod.
 
-Este módulo obtiene información estructurada de la pregunta
-antes de ejecutar herramientas MCP.
+Este módulo obtiene información estructurada desde
+la consulta del usuario antes de ejecutar herramientas MCP.
 
-En esta etapa extrae:
+Extrae principalmente:
 
-- producto
-- tienda / sala
+- producto;
+- tienda / sala.
 
-No utiliza LLM.
-No consulta SQLite.
-No ejecuta MCP.
+IMPORTANTE
+----------
+Este módulo:
 
-La estrategia determinística se utiliza porque las consultas
-del dominio contienen estructuras suficientemente claras,
-por ejemplo:
+- NO utiliza LLM;
+- NO consulta SQLite;
+- NO ejecuta MCP;
+- NO modifica datos;
+- únicamente interpreta contexto de entrada.
 
-    "Cuantos dias faltan para vencer el Yogur natural 1 litro
-     de la Sala 12"
+La extracción es determinística y trazable.
 
-Si en etapas posteriores una consulta no puede interpretarse
-de forma segura, podrá incorporarse un fallback controlado.
+Casos soportados:
+
+- VENCIMIENTO
+- CAMBIO_PRECIO
+- ACCION_COMERCIAL
+- AUDITORIA_COMPLETA explícita
+- AUDITORIA_COMPLETA por múltiples categorías
 """
 
 from __future__ import annotations
@@ -29,15 +35,22 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from .state import EstadoDeteccion, nueva_traza
+from .state import (
+    EstadoDeteccion,
+    nueva_traza,
+)
 
 
 # ============================================================
 # HELPERS
 # ============================================================
 
-def _limpiar_espacios(texto: str) -> str:
-    """Normaliza espacios consecutivos."""
+def _limpiar_espacios(
+    texto: str,
+) -> str:
+    """
+    Normaliza espacios consecutivos.
+    """
 
     return re.sub(
         r"\s+",
@@ -50,15 +63,17 @@ def _extraer_tienda(
     pregunta: str,
 ) -> str:
     """
-    Extrae expresiones como:
+    Extrae referencias de sala.
 
-        Sala 12
-        sala 7
-        SALA 3
+    Ejemplos:
 
-    y devuelve siempre:
+    Sala 12
+    sala 12
+    SALA 12
 
-        Sala <numero>
+    Devuelve:
+
+    Sala 12
     """
 
     match = re.search(
@@ -77,12 +92,15 @@ def _quitar_referencia_sala(
     texto: str,
 ) -> str:
     """
-    Elimina del texto expresiones de ubicación como:
+    Elimina la ubicación para evitar que
+    forme parte del nombre del producto.
 
-        de la Sala 12
-        en la Sala 12
-        de Sala 12
-        en Sala 12
+    Ejemplos:
+
+    de la Sala 12
+    en la Sala 12
+    de Sala 12
+    en Sala 12
     """
 
     texto = re.sub(
@@ -92,21 +110,50 @@ def _quitar_referencia_sala(
         flags=re.IGNORECASE,
     )
 
-    return _limpiar_espacios(texto)
+    return _limpiar_espacios(
+        texto
+    )
 
+
+def _limpiar_producto(
+    producto: str,
+) -> str:
+    """
+    Limpia el producto extraído.
+    """
+
+    producto = producto.strip()
+
+    producto = re.sub(
+        r"[¿?¡!.,;:]+$",
+        "",
+        producto,
+    )
+
+    return _limpiar_espacios(
+        producto
+    )
+
+
+# ============================================================
+# EXTRACCIÓN DE PRODUCTO
+# ============================================================
 
 def _extraer_producto(
     pregunta: str,
 ) -> str:
     """
-    Extrae el producto utilizando patrones de las consultas
-    reales del proyecto.
+    Extrae el producto utilizando patrones
+    controlados del dominio.
 
-    La función no intenta comprender lenguaje arbitrario.
-    Solo reconoce estructuras controladas del dominio.
+    No utiliza LLM.
     """
 
     texto = pregunta.strip()
+
+    # --------------------------------------------------------
+    # QUITAR SIGNOS
+    # --------------------------------------------------------
 
     texto = re.sub(
         r"[¿?¡!]+",
@@ -114,51 +161,62 @@ def _extraer_producto(
         texto,
     )
 
+    # --------------------------------------------------------
+    # QUITAR SALA
+    # --------------------------------------------------------
+
     texto = _quitar_referencia_sala(
         texto
     )
 
-    # --------------------------------------------------------
-    # Caso:
-    # "Cuantos dias faltan para vencer el Yogur natural 1 litro"
-    # --------------------------------------------------------
+    # ========================================================
+    # CASO 1 — VENCIMIENTO
+    #
+    # Cuantos dias faltan para vencer
+    # el Yogur natural 1 litro
+    # ========================================================
 
     match = re.search(
-        r"\bpara\s+vencer\s+(?:el|la)?\s*(.+)$",
+        r"\bpara\s+vencer\s+"
+        r"(?:el|la)?\s*(.+)$",
         texto,
         flags=re.IGNORECASE,
     )
 
     if match:
-        return _limpiar_espacios(
+        return _limpiar_producto(
             match.group(1)
         )
 
-    # --------------------------------------------------------
-    # Caso:
-    # "Revisa el producto Yogur natural 1 litro"
-    # "Consulta el detalle del producto Yogur natural 1 litro"
-    # --------------------------------------------------------
+    # ========================================================
+    # CASO 2 — DETALLE DE PRODUCTO
+    #
+    # Consulta el detalle del producto
+    # Yogur natural 1 litro
+    # ========================================================
 
     match = re.search(
-        r"\bproducto\s+(?:el|la)?\s*(.+)$",
+        r"\bproducto\s+"
+        r"(?:el|la)?\s*(.+)$",
         texto,
         flags=re.IGNORECASE,
     )
 
     if match:
-        return _limpiar_espacios(
+        return _limpiar_producto(
             match.group(1)
         )
 
-    # --------------------------------------------------------
-    # Caso:
-    # "El Yogur natural 1 litro tuvo cambios de precio"
-    # --------------------------------------------------------
+    # ========================================================
+    # CASO 3 — CAMBIO DE PRECIO
+    #
+    # El Yogur natural 1 litro
+    # tuvo cambios de precio
+    # ========================================================
 
     match = re.search(
         r"^(?:el|la)\s+(.+?)\s+"
-        r"(?:tuvo|tiene|registro|registró|ha tenido)\s+"
+        r"(?:tuvo|tiene|registro|registró|ha\s+tenido)\s+"
         r"(?:un\s+|algún\s+|algun\s+)?"
         r"cambios?\s+de\s+precio\b",
         texto,
@@ -166,26 +224,101 @@ def _extraer_producto(
     )
 
     if match:
-        return _limpiar_espacios(
+        return _limpiar_producto(
             match.group(1)
         )
 
-    # --------------------------------------------------------
-    # Caso:
-    # "Que accion comercial tiene el Yogur natural 1 litro"
-    # --------------------------------------------------------
+    # ========================================================
+    # CASO 4 — AUDITORIA COMPLETA EXPLÍCITA
+    #
+    # Necesito una auditoria completa
+    # del Yogur natural 1 litro
+    # ========================================================
 
     match = re.search(
-        r"\b(?:tiene|tiene registrada|tiene registrado)\s+"
+        r"\b(?:"
+        r"auditor[ií]a\s+(?:completa|integral)"
+        r"|"
+        r"revisi[oó]n\s+completa"
+        r")"
+        r"\s+(?:del|de\s+la)\s+(.+)$",
+        texto,
+        flags=re.IGNORECASE,
+    )
+
+    if match:
+        return _limpiar_producto(
+            match.group(1)
+        )
+
+    # ========================================================
+    # CASO 5 — AUDITORIA POR MÚLTIPLES CATEGORÍAS
+    #
+    # Revisa vencimiento, cambios de precio
+    # y accion comercial del Yogur natural 1 litro
+    #
+    # También acepta:
+    # acciones comerciales del ...
+    # acción comercial del ...
+    # acciones comerciales de la ...
+    # ========================================================
+
+    match = re.search(
+        r"\bacci[oó]n(?:es)?\s+"
+        r"comercial(?:es)?\s+"
+        r"(?:del|de\s+la)\s+(.+)$",
+        texto,
+        flags=re.IGNORECASE,
+    )
+
+    if match:
+        return _limpiar_producto(
+            match.group(1)
+        )
+
+    # ========================================================
+    # CASO 6 — ACCIÓN COMERCIAL SIMPLE
+    #
+    # Que accion comercial tiene
+    # el Yogur natural 1 litro
+    # ========================================================
+
+    match = re.search(
+        r"\bacci[oó]n(?:es)?\s+"
+        r"comercial(?:es)?"
+        r".*?\btiene\s+"
         r"(?:el|la)\s+(.+)$",
         texto,
         flags=re.IGNORECASE,
     )
 
     if match:
-        return _limpiar_espacios(
+        return _limpiar_producto(
             match.group(1)
         )
+
+    # ========================================================
+    # CASO 7 — FORMA ALTERNATIVA
+    #
+    # auditoria completa del producto
+    # Yogur natural 1 litro
+    # ========================================================
+
+    match = re.search(
+        r"\b(?:del|de\s+la)\s+producto\s+"
+        r"(?:el|la)?\s*(.+)$",
+        texto,
+        flags=re.IGNORECASE,
+    )
+
+    if match:
+        return _limpiar_producto(
+            match.group(1)
+        )
+
+    # ========================================================
+    # SIN COINCIDENCIA SEGURA
+    # ========================================================
 
     return ""
 
@@ -198,9 +331,23 @@ def extraer_contexto(
     estado: EstadoDeteccion,
 ) -> dict[str, Any]:
     """
-    Extrae producto y tienda desde la consulta del usuario.
+    Extrae producto y tienda desde la pregunta.
 
-    Este nodo es determinístico y se ejecuta antes de MCP.
+    Flujo:
+
+    validar_entrada
+        ↓
+    clasificar_intencion
+        ↓
+    extraer_contexto
+        ↓
+    nodo MCP
+
+    Si no identifica producto registra:
+
+    PRODUCTO_NO_IDENTIFICADO
+
+    para evitar una llamada MCP incompleta.
     """
 
     pregunta = estado.get(
@@ -208,18 +355,34 @@ def extraer_contexto(
         "",
     ).strip()
 
+    # --------------------------------------------------------
+    # PRODUCTO
+    # --------------------------------------------------------
+
     producto = _extraer_producto(
         pregunta
     )
+
+    # --------------------------------------------------------
+    # TIENDA
+    # --------------------------------------------------------
 
     tienda = _extraer_tienda(
         pregunta
     )
 
+    # --------------------------------------------------------
+    # VALIDACIÓN
+    # --------------------------------------------------------
+
     problema = ""
 
     if not producto:
         problema = "PRODUCTO_NO_IDENTIFICADO"
+
+    # --------------------------------------------------------
+    # RESULTADO
+    # --------------------------------------------------------
 
     return {
         "producto": producto,
@@ -235,7 +398,11 @@ def extraer_contexto(
             producto=producto,
             tienda=tienda,
             metodo="deterministico",
-            producto_identificado=bool(producto),
-            tienda_identificada=bool(tienda),
+            producto_identificado=bool(
+                producto
+            ),
+            tienda_identificada=bool(
+                tienda
+            ),
         ),
     }
