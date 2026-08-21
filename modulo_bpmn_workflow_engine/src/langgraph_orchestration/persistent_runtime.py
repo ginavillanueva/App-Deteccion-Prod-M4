@@ -6,13 +6,19 @@ Este módulo conecta:
 - EstadoDeteccion;
 - StateGraph;
 - AsyncSqliteSaver;
-- configurable.thread_id.
+- configurable.thread_id;
+- checkpoints persistentes;
+- pausa controlada;
+- reanudación desde checkpoints.
 
 Permite:
 
 1. ejecutar el workflow con checkpoints;
 2. recuperar el último estado persistido;
-3. consultar el historial de checkpoints.
+3. consultar el historial de checkpoints;
+4. comprobar si existe estado;
+5. pausar antes de un nodo específico;
+6. reanudar una ejecución previamente pausada.
 
 La base SQLite es administrada por:
 
@@ -40,14 +46,25 @@ from .state import crear_estado_inicial
 
 def _compilar_grafo_persistente(
     checkpointer: Any,
+    interrupt_before: list[str] | None = None,
 ):
     """
-    Recompila el mismo StateGraph utilizado por la aplicación,
-    agregando el checkpointer SQLite.
+    Recompila el mismo StateGraph utilizado por la aplicación
+    agregando persistencia SQLite.
+
+    Opcionalmente permite pausar el grafo antes de determinados
+    nodos mediante interrupt_before.
 
     El grafo funcional no se duplica:
     reutilizamos el builder de grafo_mcp.
     """
+
+    if interrupt_before:
+
+        return grafo_mcp.builder.compile(
+            checkpointer=checkpointer,
+            interrupt_before=interrupt_before,
+        )
 
     return grafo_mcp.builder.compile(
         checkpointer=checkpointer,
@@ -55,7 +72,7 @@ def _compilar_grafo_persistente(
 
 
 # ============================================================
-# EJECUCIÓN PERSISTENTE
+# EJECUCIÓN PERSISTENTE NORMAL
 # ============================================================
 
 async def ejecutar_persistente(
@@ -65,15 +82,8 @@ async def ejecutar_persistente(
     """
     Ejecuta App Detección Prod usando checkpoints persistentes.
 
-    Cada thread_id identifica una ejecución/conversación
-    persistente de LangGraph.
-
-    Ejemplo:
-
-        resultado = await ejecutar_persistente(
-            "Cuantos dias faltan para vencer ...",
-            "sala12-001",
-        )
+    Cada thread_id identifica una ejecución persistente
+    de LangGraph.
     """
 
     config = crear_config_checkpoint(
@@ -102,20 +112,160 @@ async def ejecutar_persistente(
 
 
 # ============================================================
-# RECUPERACIÓN
+# EJECUCIÓN CON PAUSA
 # ============================================================
 
-async def recuperar_estado_persistido(
+async def ejecutar_hasta_pausa(
+    pregunta: str,
+    thread_id: str,
+    interrupt_before: list[str],
+) -> dict[str, Any]:
+    """
+    Ejecuta el workflow hasta alcanzar uno de los nodos
+    indicados en interrupt_before.
+
+    El estado queda persistido en SQLite y puede ser
+    reanudado posteriormente desde otro proceso Python.
+
+    Ejemplo:
+
+        resultado = await ejecutar_hasta_pausa(
+            pregunta="Cuantos dias faltan ...",
+            thread_id="sala12-pausa-001",
+            interrupt_before=[
+                "consultar_detalle_mcp"
+            ],
+        )
+
+    El nodo indicado NO se ejecuta todavía.
+
+    La respuesta incluye:
+
+    - values: estado persistido;
+    - next: nodos pendientes;
+    - metadata: metadata del checkpoint.
+    """
+
+    if not interrupt_before:
+        raise ValueError(
+            "interrupt_before debe contener al menos un nodo."
+        )
+
+    config = crear_config_checkpoint(
+        thread_id
+    )
+
+    estado = crear_estado_inicial(
+        pregunta,
+        thread_id,
+    )
+
+    async with abrir_checkpointer_langgraph() as checkpointer:
+
+        grafo = _compilar_grafo_persistente(
+            checkpointer,
+            interrupt_before=interrupt_before,
+        )
+
+        await grafo.ainvoke(
+            estado,
+            config=config,
+        )
+
+        snapshot = await grafo.aget_state(
+            config
+        )
+
+        return {
+            "values": dict(
+                snapshot.values or {}
+            ),
+            "next": list(
+                snapshot.next or ()
+            ),
+            "metadata": dict(
+                snapshot.metadata or {}
+            ),
+        }
+
+
+# ============================================================
+# REANUDACIÓN
+# ============================================================
+
+async def reanudar_persistente(
     thread_id: str,
 ) -> dict[str, Any]:
     """
-    Recupera el último estado almacenado para un thread_id.
+    Reanuda un workflow previamente persistido.
 
     IMPORTANTE:
-    esta función NO vuelve a ejecutar el workflow y NO llama MCP.
 
-    Solo consulta los checkpoints previamente almacenados
-    por LangGraph.
+    No crea un nuevo estado inicial.
+
+    No vuelve a ejecutar el workflow desde __start__.
+
+    LangGraph utiliza el checkpoint asociado al thread_id
+    y continúa desde el nodo pendiente.
+
+    Internamente se utiliza:
+
+        await grafo.ainvoke(
+            None,
+            config=config,
+        )
+    """
+
+    config = crear_config_checkpoint(
+        thread_id
+    )
+
+    async with abrir_checkpointer_langgraph() as checkpointer:
+
+        grafo = _compilar_grafo_persistente(
+            checkpointer
+        )
+
+        snapshot_antes = await grafo.aget_state(
+            config
+        )
+
+        if not snapshot_antes.values:
+            raise ValueError(
+                "No existe un checkpoint persistido "
+                f"para thread_id={thread_id!r}."
+            )
+
+        resultado = await grafo.ainvoke(
+            None,
+            config=config,
+        )
+
+    return dict(
+        resultado
+    )
+
+
+# ============================================================
+# INFORMACIÓN DEL CHECKPOINT
+# ============================================================
+
+async def obtener_checkpoint_persistido(
+    thread_id: str,
+) -> dict[str, Any]:
+    """
+    Recupera el checkpoint más reciente de un thread.
+
+    A diferencia de recuperar_estado_persistido(), esta
+    función también devuelve:
+
+    - next;
+    - metadata.
+
+    Esto permite conocer si un workflow:
+
+    - terminó: next == [];
+    - está pausado: next contiene nodos pendientes.
     """
 
     config = crear_config_checkpoint(
@@ -135,9 +285,53 @@ async def recuperar_estado_persistido(
         if snapshot is None:
             return {}
 
-        return dict(
+        valores = dict(
             snapshot.values or {}
         )
+
+        if not valores:
+            return {}
+
+        return {
+            "values": valores,
+            "next": list(
+                snapshot.next or ()
+            ),
+            "metadata": dict(
+                snapshot.metadata or {}
+            ),
+        }
+
+
+# ============================================================
+# RECUPERACIÓN DE ESTADO
+# ============================================================
+
+async def recuperar_estado_persistido(
+    thread_id: str,
+) -> dict[str, Any]:
+    """
+    Recupera el último estado almacenado para un thread_id.
+
+    Esta función NO vuelve a ejecutar el workflow
+    y NO llama MCP.
+
+    Solo consulta los checkpoints almacenados por LangGraph.
+    """
+
+    checkpoint = await obtener_checkpoint_persistido(
+        thread_id
+    )
+
+    if not checkpoint:
+        return {}
+
+    return dict(
+        checkpoint.get(
+            "values",
+            {},
+        )
+    )
 
 
 # ============================================================
@@ -150,9 +344,8 @@ async def obtener_historial_persistido(
     """
     Recupera el historial de checkpoints de un thread.
 
-    Devuelve una lista ordenada según la respuesta de
-    LangGraph, normalmente desde el estado más reciente
-    hacia los estados anteriores.
+    LangGraph normalmente devuelve primero el checkpoint
+    más reciente y después los anteriores.
     """
 
     config = crear_config_checkpoint(
@@ -209,3 +402,38 @@ async def existe_estado_persistido(
     return bool(
         estado
     )
+
+
+# ============================================================
+# ESTADO DE EJECUCIÓN
+# ============================================================
+
+async def obtener_estado_ejecucion(
+    thread_id: str,
+) -> str:
+    """
+    Indica el estado general de un workflow persistido.
+
+    Valores posibles:
+
+    - NO_EXISTE
+    - PAUSADO
+    - FINALIZADO
+    """
+
+    checkpoint = await obtener_checkpoint_persistido(
+        thread_id
+    )
+
+    if not checkpoint:
+        return "NO_EXISTE"
+
+    pendientes = checkpoint.get(
+        "next",
+        [],
+    )
+
+    if pendientes:
+        return "PAUSADO"
+
+    return "FINALIZADO"
