@@ -402,3 +402,156 @@ async def consultar_cambios_precio_mcp(
         salida["problema"] = ""
 
     return salida
+# ============================================================
+# NODO MCP — ACCIONES COMERCIALES
+# ============================================================
+
+async def consultar_acciones_comerciales_mcp(
+    estado: EstadoDeteccion,
+) -> dict[str, Any]:
+    """
+    Consulta acciones comerciales registradas mediante MCP.
+
+    Este nodo reutiliza la herramienta existente:
+
+        consultar_acciones_comerciales
+
+    La información consultada puede contener:
+    - tipo de acción;
+    - estado;
+    - responsable;
+    - fecha del registro;
+    - evidencia.
+
+    IMPORTANTE:
+    Este nodo consulta acciones ya registradas.
+
+    NO:
+    - inventa acciones comerciales;
+    - cambia su estado;
+    - aprueba acciones;
+    - ejecuta descuentos;
+    - modifica precios.
+    """
+
+    producto, _, argumentos = (
+        _argumentos_producto_tienda(
+            estado
+        )
+    )
+
+    # --------------------------------------------------------
+    # Guardrail previo
+    # --------------------------------------------------------
+
+    if not producto:
+        return {
+            "problema": "PRODUCTO_NO_IDENTIFICADO",
+            "traza": nueva_traza(
+                nodo="consultar_acciones_comerciales_mcp",
+                tipo="mcp_omitido",
+                mensaje=(
+                    "No se consultaron acciones comerciales "
+                    "porque el producto no fue identificado."
+                ),
+                tool="consultar_acciones_comerciales",
+            ),
+        }
+
+    # --------------------------------------------------------
+    # MCP / tools/call
+    # --------------------------------------------------------
+
+    respuesta_mcp = await call_mcp_tool(
+        "consultar_acciones_comerciales",
+        argumentos,
+    )
+
+    # --------------------------------------------------------
+    # Error MCP
+    # --------------------------------------------------------
+
+    if respuesta_mcp.get(
+        "isError",
+        False,
+    ):
+        return {
+            "problema": "MCP_ERROR",
+            "observaciones": [
+                {
+                    "tool_name":
+                        "consultar_acciones_comerciales",
+                    "error": True,
+                    "respuesta_mcp": respuesta_mcp,
+                }
+            ],
+            "tools_usadas": [
+                "consultar_acciones_comerciales",
+            ],
+            "traza": nueva_traza(
+                nodo="consultar_acciones_comerciales_mcp",
+                tipo="mcp_error",
+                mensaje=(
+                    "La consulta de acciones comerciales "
+                    "devolvió un error MCP."
+                ),
+                tool="consultar_acciones_comerciales",
+                argumentos=argumentos,
+                via="MCP",
+                operacion="tools/call",
+            ),
+        }
+
+    # --------------------------------------------------------
+    # Resultado estructurado
+    # --------------------------------------------------------
+
+    resultado = (
+        _extraer_contenido_estructurado(
+            respuesta_mcp
+        )
+    )
+
+    fuentes = _extraer_fuentes(
+        resultado
+    )
+
+    row_count = resultado.get(
+        "row_count",
+        0,
+    )
+
+    salida: dict[str, Any] = {
+        "observaciones": [
+            resultado,
+        ],
+        "fuentes": fuentes,
+        "tools_usadas": [
+            "consultar_acciones_comerciales",
+        ],
+        "traza": nueva_traza(
+            nodo="consultar_acciones_comerciales_mcp",
+            tipo="mcp_observation",
+            mensaje=(
+                "Acciones comerciales registradas "
+                "consultadas mediante MCP."
+            ),
+            tool="consultar_acciones_comerciales",
+            argumentos=argumentos,
+            via="MCP",
+            transporte="stdio",
+            operacion="tools/call",
+            row_count=row_count,
+            fuentes=fuentes,
+            politica=(
+                "CONSULTA_DE_REGISTRO_SIN_EJECUCION_AUTONOMA"
+            ),
+        ),
+    }
+
+    if row_count == 0:
+        salida["problema"] = "SIN_RESULTADOS"
+    else:
+        salida["problema"] = ""
+
+    return salida

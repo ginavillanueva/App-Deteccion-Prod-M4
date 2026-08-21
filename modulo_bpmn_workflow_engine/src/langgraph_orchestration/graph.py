@@ -3,31 +3,44 @@ Orquestación LangGraph de App Detección Prod.
 
 Nivel 5 de la arquitectura.
 
-Responsabilidades de esta capa:
+Responsabilidades:
 - mantener estado explícito;
 - aplicar guardrails;
 - clasificar intención;
-- enrutar el flujo;
 - extraer contexto;
-- decidir qué herramienta MCP ejecutar;
-- conservar trazabilidad.
+- realizar routing condicional;
+- seleccionar el nodo MCP apropiado;
+- preservar trazabilidad.
 
-IMPORTANTE:
-LangGraph no consulta SQLite directamente.
+IMPORTANTE
+----------
+LangGraph NO consulta SQLite directamente.
 
-Las consultas de negocio atraviesan:
+El recorrido de datos es:
 
 LangGraph
     -> nodo MCP
     -> Cliente MCP
     -> tools/call
     -> Servidor MCP
+    -> herramientas existentes
     -> SQLite
 
-POLÍTICA DE PRECIOS:
-Los cambios de precio son únicamente informativos
-y de trazabilidad. Este grafo no aprueba, rechaza
-ni modifica precios.
+Ramas implementadas:
+- VENCIMIENTO
+- CAMBIO_PRECIO
+- ACCION_COMERCIAL
+
+POLÍTICA DE PRECIOS
+-------------------
+Los cambios de precio son información y trazabilidad.
+El agente no aprueba, rechaza ni modifica precios.
+
+POLÍTICA DE ACCIONES COMERCIALES
+--------------------------------
+Las acciones comerciales consultadas son registros existentes.
+El agente no inventa, aprueba ni ejecuta autónomamente
+descuentos u otras acciones.
 """
 
 from __future__ import annotations
@@ -38,6 +51,7 @@ from langgraph.graph import END, START, StateGraph
 
 from .context_nodes import extraer_contexto
 from .mcp_nodes import (
+    consultar_acciones_comerciales_mcp,
     consultar_cambios_precio_mcp,
     consultar_detalle_mcp,
 )
@@ -59,8 +73,8 @@ def ruta_despues_validacion(
     "bloqueada",
 ]:
     """
-    Detiene entradas bloqueadas antes de clasificación,
-    extracción de contexto o ejecución MCP.
+    Las entradas bloqueadas terminan antes de ejecutar
+    clasificación, extracción de contexto o MCP.
     """
 
     if estado.get("bloqueado", False):
@@ -78,15 +92,14 @@ def ruta_despues_clasificacion(
 ) -> Literal[
     "vencimiento",
     "cambio_precio",
+    "accion_comercial",
     "otro",
 ]:
     """
-    Decide qué tipo de proceso necesita la consulta.
+    Determina la rama de negocio.
 
-    VENCIMIENTO y CAMBIO_PRECIO necesitan primero
-    extraer producto y tienda.
-
-    Las demás intenciones todavía terminan en END.
+    Las tres intenciones implementadas necesitan
+    extraer primero producto y tienda.
     """
 
     intencion = estado.get(
@@ -100,6 +113,9 @@ def ruta_despues_clasificacion(
     if intencion == "CAMBIO_PRECIO":
         return "cambio_precio"
 
+    if intencion == "ACCION_COMERCIAL":
+        return "accion_comercial"
+
     return "otro"
 
 
@@ -112,14 +128,15 @@ def ruta_despues_contexto(
 ) -> Literal[
     "detalle",
     "precio",
+    "accion",
     "sin_producto",
     "otro",
 ]:
     """
-    Después de extraer producto y tienda decide
-    qué nodo MCP debe ejecutarse.
+    Después de extraer producto y tienda, selecciona
+    la herramienta MCP correspondiente.
 
-    Nunca llama MCP si no existe producto.
+    Nunca llama MCP si no se identificó un producto.
     """
 
     producto = estado.get(
@@ -140,6 +157,9 @@ def ruta_despues_contexto(
 
     if intencion == "CAMBIO_PRECIO":
         return "precio"
+
+    if intencion == "ACCION_COMERCIAL":
+        return "accion"
 
     return "otro"
 
@@ -205,9 +225,11 @@ def construir_grafo_basico():
 
 def construir_grafo_mcp():
     """
-    StateGraph con routing de negocio y MCP.
+    StateGraph con tres ramas funcionales.
 
-    Flujo VENCIMIENTO:
+    ----------------------------------------------------------
+    VENCIMIENTO
+    ----------------------------------------------------------
 
     START
       ↓
@@ -221,8 +243,9 @@ def construir_grafo_mcp():
       ↓
     END
 
-
-    Flujo CAMBIO_PRECIO:
+    ----------------------------------------------------------
+    CAMBIO_PRECIO
+    ----------------------------------------------------------
 
     START
       ↓
@@ -236,8 +259,21 @@ def construir_grafo_mcp():
       ↓
     END
 
-    Los cambios de precio son únicamente
-    informativos y de trazabilidad.
+    ----------------------------------------------------------
+    ACCION_COMERCIAL
+    ----------------------------------------------------------
+
+    START
+      ↓
+    validar_entrada
+      ↓
+    clasificar_intencion
+      ↓
+    extraer_contexto
+      ↓
+    consultar_acciones_comerciales_mcp
+      ↓
+    END
     """
 
     builder = StateGraph(
@@ -273,6 +309,11 @@ def construir_grafo_mcp():
         consultar_cambios_precio_mcp,
     )
 
+    builder.add_node(
+        "consultar_acciones_comerciales_mcp",
+        consultar_acciones_comerciales_mcp,
+    )
+
     # --------------------------------------------------------
     # START
     # --------------------------------------------------------
@@ -283,7 +324,7 @@ def construir_grafo_mcp():
     )
 
     # --------------------------------------------------------
-    # SEGURIDAD
+    # GUARDRAIL
     # --------------------------------------------------------
 
     builder.add_conditional_edges(
@@ -296,7 +337,7 @@ def construir_grafo_mcp():
     )
 
     # --------------------------------------------------------
-    # INTENCIÓN
+    # ROUTING DE INTENCIÓN
     # --------------------------------------------------------
 
     builder.add_conditional_edges(
@@ -305,6 +346,7 @@ def construir_grafo_mcp():
         {
             "vencimiento": "extraer_contexto",
             "cambio_precio": "extraer_contexto",
+            "accion_comercial": "extraer_contexto",
             "otro": END,
         },
     )
@@ -319,6 +361,7 @@ def construir_grafo_mcp():
         {
             "detalle": "consultar_detalle_mcp",
             "precio": "consultar_cambios_precio_mcp",
+            "accion": "consultar_acciones_comerciales_mcp",
             "sin_producto": END,
             "otro": END,
         },
@@ -335,6 +378,11 @@ def construir_grafo_mcp():
 
     builder.add_edge(
         "consultar_cambios_precio_mcp",
+        END,
+    )
+
+    builder.add_edge(
+        "consultar_acciones_comerciales_mcp",
         END,
     )
 
