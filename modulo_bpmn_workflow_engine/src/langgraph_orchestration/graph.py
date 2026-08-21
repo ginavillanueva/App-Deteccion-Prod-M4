@@ -1,33 +1,33 @@
 """
-Grafos LangGraph de App Detección Prod.
+Orquestación LangGraph de App Detección Prod.
 
-Este módulo mantiene:
+Nivel 5 de la arquitectura.
 
-1. grafo_basico
-   - validación
-   - clasificación
-   - routing de seguridad
+Responsabilidades de esta capa:
+- mantener estado explícito;
+- aplicar guardrails;
+- clasificar intención;
+- enrutar el flujo;
+- extraer contexto;
+- decidir qué herramienta MCP ejecutar;
+- conservar trazabilidad.
 
-2. grafo_mcp
-   - validación
-   - clasificación
-   - extracción determinística de contexto
-   - routing por intención
-   - herramientas MCP reales
+IMPORTANTE:
+LangGraph no consulta SQLite directamente.
 
-Flujo de vencimiento:
+Las consultas de negocio atraviesan:
 
-START
-  ↓
-validar_entrada
-  ↓
-clasificar_intencion
-  ↓
-extraer_contexto
-  ↓
-consultar_detalle_mcp
-  ↓
-END
+LangGraph
+    -> nodo MCP
+    -> Cliente MCP
+    -> tools/call
+    -> Servidor MCP
+    -> SQLite
+
+POLÍTICA DE PRECIOS:
+Los cambios de precio son únicamente informativos
+y de trazabilidad. Este grafo no aprueba, rechaza
+ni modifica precios.
 """
 
 from __future__ import annotations
@@ -37,23 +37,30 @@ from typing import Literal
 from langgraph.graph import END, START, StateGraph
 
 from .context_nodes import extraer_contexto
-from .mcp_nodes import consultar_detalle_mcp
-from .nodes import clasificar_intencion, validar_entrada
+from .mcp_nodes import (
+    consultar_cambios_precio_mcp,
+    consultar_detalle_mcp,
+)
+from .nodes import (
+    clasificar_intencion,
+    validar_entrada,
+)
 from .state import EstadoDeteccion
 
 
 # ============================================================
-# ROUTING DE SEGURIDAD
+# ROUTING 1 — SEGURIDAD
 # ============================================================
 
 def ruta_despues_validacion(
     estado: EstadoDeteccion,
-) -> Literal["continuar", "bloqueada"]:
+) -> Literal[
+    "continuar",
+    "bloqueada",
+]:
     """
-    Decide si la consulta puede continuar.
-
-    Las consultas bloqueadas terminan antes de ejecutar
-    clasificación, MCP o cualquier herramienta.
+    Detiene entradas bloqueadas antes de clasificación,
+    extracción de contexto o ejecución MCP.
     """
 
     if estado.get("bloqueado", False):
@@ -63,20 +70,23 @@ def ruta_despues_validacion(
 
 
 # ============================================================
-# ROUTING DE NEGOCIO
+# ROUTING 2 — INTENCIÓN
 # ============================================================
 
 def ruta_despues_clasificacion(
     estado: EstadoDeteccion,
 ) -> Literal[
     "vencimiento",
+    "cambio_precio",
     "otro",
 ]:
     """
-    Selecciona la rama de negocio.
+    Decide qué tipo de proceso necesita la consulta.
 
-    Por ahora solamente VENCIMIENTO está conectado
-    al flujo completo mediante MCP.
+    VENCIMIENTO y CAMBIO_PRECIO necesitan primero
+    extraer producto y tienda.
+
+    Las demás intenciones todavía terminan en END.
     """
 
     intencion = estado.get(
@@ -87,23 +97,29 @@ def ruta_despues_clasificacion(
     if intencion == "VENCIMIENTO":
         return "vencimiento"
 
+    if intencion == "CAMBIO_PRECIO":
+        return "cambio_precio"
+
     return "otro"
 
 
 # ============================================================
-# ROUTING DESPUÉS DE EXTRAER CONTEXTO
+# ROUTING 3 — CONTEXTO + HERRAMIENTA
 # ============================================================
 
 def ruta_despues_contexto(
     estado: EstadoDeteccion,
 ) -> Literal[
-    "consultar",
+    "detalle",
+    "precio",
     "sin_producto",
+    "otro",
 ]:
     """
-    Comprueba que exista un producto antes de llamar MCP.
+    Después de extraer producto y tienda decide
+    qué nodo MCP debe ejecutarse.
 
-    Esto evita ejecutar tools/call con argumentos incompletos.
+    Nunca llama MCP si no existe producto.
     """
 
     producto = estado.get(
@@ -114,7 +130,18 @@ def ruta_despues_contexto(
     if not producto:
         return "sin_producto"
 
-    return "consultar"
+    intencion = estado.get(
+        "intencion",
+        "OTRO",
+    )
+
+    if intencion == "VENCIMIENTO":
+        return "detalle"
+
+    if intencion == "CAMBIO_PRECIO":
+        return "precio"
+
+    return "otro"
 
 
 # ============================================================
@@ -178,24 +205,39 @@ def construir_grafo_basico():
 
 def construir_grafo_mcp():
     """
-    StateGraph conectado al Nivel 4 mediante MCP.
+    StateGraph con routing de negocio y MCP.
 
-    Para la intención VENCIMIENTO:
+    Flujo VENCIMIENTO:
 
+    START
+      ↓
     validar_entrada
-        ↓
+      ↓
     clasificar_intencion
-        ↓
+      ↓
     extraer_contexto
-        ↓
+      ↓
     consultar_detalle_mcp
-        ↓
+      ↓
     END
 
-    Producto y tienda se obtienen automáticamente desde
-    la pregunta del usuario.
 
-    No existe SQL dentro de esta capa.
+    Flujo CAMBIO_PRECIO:
+
+    START
+      ↓
+    validar_entrada
+      ↓
+    clasificar_intencion
+      ↓
+    extraer_contexto
+      ↓
+    consultar_cambios_precio_mcp
+      ↓
+    END
+
+    Los cambios de precio son únicamente
+    informativos y de trazabilidad.
     """
 
     builder = StateGraph(
@@ -203,7 +245,7 @@ def construir_grafo_mcp():
     )
 
     # --------------------------------------------------------
-    # Nodos
+    # NODOS
     # --------------------------------------------------------
 
     builder.add_node(
@@ -226,8 +268,13 @@ def construir_grafo_mcp():
         consultar_detalle_mcp,
     )
 
+    builder.add_node(
+        "consultar_cambios_precio_mcp",
+        consultar_cambios_precio_mcp,
+    )
+
     # --------------------------------------------------------
-    # Inicio
+    # START
     # --------------------------------------------------------
 
     builder.add_edge(
@@ -236,7 +283,7 @@ def construir_grafo_mcp():
     )
 
     # --------------------------------------------------------
-    # Guardrail de entrada
+    # SEGURIDAD
     # --------------------------------------------------------
 
     builder.add_conditional_edges(
@@ -249,7 +296,7 @@ def construir_grafo_mcp():
     )
 
     # --------------------------------------------------------
-    # Routing según intención
+    # INTENCIÓN
     # --------------------------------------------------------
 
     builder.add_conditional_edges(
@@ -257,29 +304,37 @@ def construir_grafo_mcp():
         ruta_despues_clasificacion,
         {
             "vencimiento": "extraer_contexto",
+            "cambio_precio": "extraer_contexto",
             "otro": END,
         },
     )
 
     # --------------------------------------------------------
-    # Validación del contexto extraído
+    # CONTEXTO + SELECCIÓN DE HERRAMIENTA
     # --------------------------------------------------------
 
     builder.add_conditional_edges(
         "extraer_contexto",
         ruta_despues_contexto,
         {
-            "consultar": "consultar_detalle_mcp",
+            "detalle": "consultar_detalle_mcp",
+            "precio": "consultar_cambios_precio_mcp",
             "sin_producto": END,
+            "otro": END,
         },
     )
 
     # --------------------------------------------------------
-    # Fin de la rama MCP
+    # FIN DE LAS RAMAS MCP
     # --------------------------------------------------------
 
     builder.add_edge(
         "consultar_detalle_mcp",
+        END,
+    )
+
+    builder.add_edge(
+        "consultar_cambios_precio_mcp",
         END,
     )
 
