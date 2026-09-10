@@ -92,19 +92,34 @@ def _quitar_referencia_sala(
     texto: str,
 ) -> str:
     """
-    Elimina la ubicación para evitar que
+    Elimina la referencia de sala para evitar que
     forme parte del nombre del producto.
 
-    Ejemplos:
+    Formatos soportados al final del texto:
 
+    Sala 12
     de la Sala 12
     en la Sala 12
     de Sala 12
     en Sala 12
+
+    La sala se conserva de forma independiente mediante
+    _extraer_tienda().
+
+    Ejemplo:
+
+        Yogur natural 1 litro Sala 12
+
+    Resultado:
+
+        Yogur natural 1 litro
     """
 
     texto = re.sub(
-        r"\s+(?:de|en)\s+(?:la\s+)?sala\s*\d+\b",
+        r"\s+"
+        r"(?:(?:de|en)\s+(?:la\s+)?)?"
+        r"sala\s*\d+\b"
+        r"\s*$",
         "",
         texto,
         flags=re.IGNORECASE,

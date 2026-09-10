@@ -1,0 +1,70 @@
+﻿{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "app-deteccion-prod-response.schema.json",
+  "title": "App Deteccion Prod - POST /api/v1/deteccion",
+  "description": "Contrato de respuesta del endpoint principal de App Deteccion Prod.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "thread_id",
+    "intencion",
+    "producto",
+    "tienda",
+    "bloqueado",
+    "problema",
+    "tools_usadas",
+    "fuentes",
+    "observaciones",
+    "traza",
+    "respuesta"
+  ],
+  "properties": {
+    "thread_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "intencion": {
+      "type": "string",
+      "enum": [
+        "VENCIMIENTO",
+        "CAMBIO_PRECIO",
+        "ACCION_COMERCIAL",
+        "AUDITORIA_COMPLETA",
+        "OTRO"
+      ]
+    },
+    "producto": {
+      "type": "string"
+    },
+    "tienda": {
+      "type": "string"
+    },
+    "bloqueado": {
+      "type": "boolean"
+    },
+    "problema": {
+      "type": "string"
+    },
+    "tools_usadas": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "fuentes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "observaciones": {
+      "type": "array"
+    },
+    "traza": {
+      "type": "array"
+    },
+    "respuesta": {
+      "type": "string"
+    }
+  }
+}

@@ -26,3 +26,6 @@ Thumbs.db
 build/
 dist/
 *.log
+
+.coverage
+data/demo_evidencias/

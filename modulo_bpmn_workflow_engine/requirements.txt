@@ -1,4 +1,8 @@
-mcp[cli]==1.29.0
+﻿mcp[cli]==1.29.0
 streamlit==1.27.0
 langgraph==1.2.11
 langgraph-checkpoint-sqlite==3.1.1
+starlette==1.6.0
+httpx==0.28.1
+jsonschema==4.26.0
+coverage==7.16.0
