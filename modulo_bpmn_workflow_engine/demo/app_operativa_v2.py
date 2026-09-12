@@ -532,7 +532,14 @@ for key, default_value in DEFAULT_SESSION_STATE.items():
 
 salas = load_salas()
 products = load_products()
-thread_id = st.session_state.thread_id
+
+# Garant?a defensiva para rerenders de Streamlit:
+# thread_id debe existir antes de cualquier lectura o clave por thread.
+thread_id = st.session_state.get("thread_id")
+
+if not thread_id:
+    thread_id = new_thread_id()
+    st.session_state["thread_id"] = thread_id
 
 # Claves multimodales únicas por thread.
 audio_upload_key = f"audio_uploaded__{thread_id}"
@@ -561,9 +568,9 @@ with st.sidebar:
     st.header("🎛 Control")
 
     st.caption("Thread ID")
-    st.code(
-        st.session_state.thread_id,
-        language=None,
+    st.markdown(
+        f'<code data-testid="thread-id" aria-label="Thread ID">{st.session_state.thread_id}</code>',
+        unsafe_allow_html=True,
     )
 
     st.button(

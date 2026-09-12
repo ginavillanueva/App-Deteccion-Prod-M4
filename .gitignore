@@ -5,3 +5,14 @@ __pycache__/
 
 # Base SQLite generada para la demostracion
 modulo_bpmn_workflow_engine/data/*.db
+.playwright-mcp/
+.vscode/
+artifacts/
+**/*.bak
+**/node_modules/
+**/test-results/
+**/playwright-report/
+**/__pycache__/
+**/*.pyc
+**/specs/OPE*_ERROR*.txt
+**/specs/OPE*_FALLO*.txt

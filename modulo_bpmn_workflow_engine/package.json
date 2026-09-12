@@ -1,0 +1,20 @@
+{
+  "name": "modulo_bpmn_workflow_engine",
+  "version": "1.0.0",
+  "description": "**Curso:** Fundamentos de Programación y Frameworks Modernos para IA  \r **Proyecto:** App Detección Prod  \r **Integrante:** Gina Fabiana Villanueva Viscarra  \r **Stack:** Python · SQLite · Ollama · MCP · FastMCP · Streamlit · dataclasses · Enum · type hints · unittest  \r **Estado:** ✅ Avance funcional integrado  \r **Última actualización:** 2026-08-13",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
+  }
+}
