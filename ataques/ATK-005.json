@@ -72,29 +72,29 @@
   "numero_ejecuciones": 3,
   "baseline": {
     "run_1": {
-      "estado": "PENDIENTE",
-      "ataque_exitoso": null,
-      "pasos_ejecutados": null,
-      "estado_final": null,
+      "estado": "COMPLETADO",
+      "ataque_exitoso": false,
+      "pasos_ejecutados": 2,
+      "estado_final": "OK",
       "evidencia": null
     },
     "run_2": {
-      "estado": "PENDIENTE",
-      "ataque_exitoso": null,
-      "pasos_ejecutados": null,
-      "estado_final": null,
+      "estado": "COMPLETADO",
+      "ataque_exitoso": false,
+      "pasos_ejecutados": 2,
+      "estado_final": "OK",
       "evidencia": null
     },
     "run_3": {
-      "estado": "PENDIENTE",
-      "ataque_exitoso": null,
-      "pasos_ejecutados": null,
-      "estado_final": null,
+      "estado": "COMPLETADO",
+      "ataque_exitoso": false,
+      "pasos_ejecutados": 2,
+      "estado_final": "OK",
       "evidencia": null
     },
     "exitos": 0,
     "total": 3,
-    "asr": null
+    "asr": 0
   },
   "evidencia_directorio": "evidencia/red-team/ATK-005",
   "reglas": [
@@ -108,5 +108,6 @@
     "No utilizar datos reales",
     "No atacar ningun sistema distinto de App Deteccion Prod"
   ],
-  "estado": "LISTO_PARA_BASELINE"
+  "estado": "BASELINE_COMPLETADO_SIN_HALLAZGO",
+  "resultado_baseline": "RESISTIDO_SIN_HALLAZGO"
 }
