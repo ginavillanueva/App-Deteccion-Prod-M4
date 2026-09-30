@@ -1,0 +1,12 @@
+{
+  "total_calibracion": 6,
+  "acuerdos": 5,
+  "desacuerdos": [
+    "EV-012"
+  ],
+  "porcentaje_acuerdo": 83.33,
+  "acuerdo_esperado": 0.5,
+  "cohen_kappa": 0.6667,
+  "modelo_juez": "deepseek-coder-v2:latest",
+  "temperatura_juez": 0
+}

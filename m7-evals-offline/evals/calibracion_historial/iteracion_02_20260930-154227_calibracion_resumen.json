@@ -1,0 +1,14 @@
+{
+  "total_calibracion": 6,
+  "acuerdos": 3,
+  "desacuerdos": [
+    "EV-010",
+    "EV-012",
+    "EV-014"
+  ],
+  "porcentaje_acuerdo": 50.0,
+  "acuerdo_esperado": 0.5,
+  "cohen_kappa": 0.0,
+  "modelo_juez": "llama3.2:3b-instruct-q4_K_M",
+  "temperatura_juez": 0
+}

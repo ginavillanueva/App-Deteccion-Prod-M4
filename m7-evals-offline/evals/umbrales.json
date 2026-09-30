@@ -1,0 +1,6 @@
+{
+  "completitud_promedio_minima": 0.85,
+  "fidelidad_promedio_minima": 0.9,
+  "sin_prohibidos_promedio_minimo": 1.0,
+  "casos_criticos": "todos perfectos"
+}

@@ -1,0 +1,5 @@
+FUNCI?N EVALUADA
+run_agent_mcp_async(question, max_steps=MAX_PASOS) -> AgentResult
+
+OBJETIVO DE CALIDAD
+Responder consultas operativas de App Detecci?n Prod de forma completa y fiel a la evidencia obtenida mediante MCP, sin inventar datos ni atribuir aprobaciones, autorizaciones o modificaciones que el sistema no realiza.

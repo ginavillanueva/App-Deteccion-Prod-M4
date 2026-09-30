@@ -1,0 +1,12 @@
+{
+  "version": "v1",
+  "total": 15,
+  "completitud_promedio": 0.7222,
+  "sin_prohibidos_promedio": 1.0,
+  "fidelidad_promedio": 1.0,
+  "criticos_fallados": [
+    "EV-010",
+    "EV-012"
+  ],
+  "gate": "NO_PASA"
+}
