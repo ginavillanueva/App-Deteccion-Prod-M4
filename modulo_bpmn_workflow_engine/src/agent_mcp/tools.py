@@ -1,4 +1,4 @@
-"""Herramientas locales del agente de App Detección Prod."""
+﻿"""Herramientas locales del agente de App Detección Prod."""
 
 from __future__ import annotations
 
@@ -221,7 +221,8 @@ def consultar_cambios_precio(
                     2
                 ) AS variacion_precio,
                 cp.solicitado_por AS registrado_por,
-                cp.fecha_solicitud AS fecha_registro
+                cp.fecha_solicitud AS fecha_registro,
+                cp.estado_aprobacion
             FROM cambios_precio AS cp
             INNER JOIN productos_vencimiento AS pv
                 ON pv.id = cp.producto_id
