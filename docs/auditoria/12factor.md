@@ -138,6 +138,9 @@
 **Observación:** No se acreditó una imagen construida una sola vez, promoción entre entornos, ni una prueba real de SIGTERM. El ZIP no permite probar el comportamiento ante `docker stop`; se requiere artefacto de build y demostración de cierre.  
 **Auditó:** Gina Fabiana Villanueva Viscarra.
 
+**Verificación complementaria (15/10/2026):** Se revisó `modulo_bpmn_workflow_engine/.github/workflows/copilot-setup-steps.yml` (líneas 1–34). El workflow configura un entorno Ubuntu, instala dependencias mediante `npm ci`, instala Playwright y declara un paso de construcción con `npx run build`. Las búsquedas por nombre `Dockerfile` y `compose` no mostraron coincidencias en el navegador de archivos. No se encontraron en esta revisión evidencias de imagen Docker inmutable ni de una prueba de apagado limpio con SIGTERM. La ejecución correcta del workflow tampoco fue comprobada. Se conserva F12-06 como `NO VERIFICABLE`.
+
+**Evidencia:** https://github.com/ginavillanueva/App-Deteccion-Prod-M4/blob/release/8.0.0/modulo_bpmn_workflow_engine/.github/workflows/copilot-setup-steps.yml
 
 ## 4. Preguntas al grupo
 
