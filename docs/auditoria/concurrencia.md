@@ -56,7 +56,7 @@
 ## 1. Datos del repositorio (oleada 0)
 
 - **Grupo:** App Detección Prod.
-- **Commit auditado (`release/8.0.0`):** `NO VERIFICABLE` (se recibió ZIP de `evals-offline-dia10`, sin `.git`; el equipo debe fijar y comunicar el hash).
+- **Commit auditado (`release/8.0.0`):** `500cfdabc77ea925552264bf695a56409d534a0d` — commit base identificado en GitHub, correspondiente al estado inicial de la rama antes de incorporar las auditorías. La revisión técnica original se realizó sobre archivos exportados; las comprobaciones que requieren ejecución local siguen pendientes.
 - **Fecha de la auditoría:** 2026-10-15.
 - **Servicios y runtime:** Python; servicio HTTP con Starlette (`src/api/contract_api.py`), demo UI con Streamlit (`app_demo.py`), servidor MCP con FastMCP (`src/agent_mcp/servidor_mcp.py`), motor con `ThreadPoolExecutor` y cliente Ollama HTTP. **Versiones de runtime, procesos y réplicas reales: no verificadas.**
 - **Acceso a datos:** `sqlite3` en repositorio de workflow y BD local demo; `AsyncSqliteSaver` para LangGraph (checkpoints). **Base de datos:** SQLite en archivos locales.
