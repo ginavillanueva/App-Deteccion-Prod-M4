@@ -136,9 +136,9 @@
 
 | N.º | Comprobación | Pregunta | Respuesta del grupo | Estado (respondida / sin respuesta) |
 |---|---|---|---|---|
-| P1 | CON-01 | ¿Cuántos workers y réplicas se ejecutan en cada entorno (API, Streamlit, MCP)? | No consta en los ZIP; debe confirmarlo el equipo en su entorno Git/despliegue. | sin respuesta |
-| P2 | CON-03 | ¿Qué tráfico de consultas/seg se prevé y cuánto dura cada conexión SQLite? | No consta en los ZIP; debe confirmarlo el equipo en su entorno Git/despliegue. | sin respuesta |
-| P3 | CON-04 | ¿Existe un límite concurrente global del LLM o un proxy/cola externo no documentado? | No consta en los ZIP; debe confirmarlo el equipo en su entorno Git/despliegue. | sin respuesta |
+| P1 | CON-01 | ¿Cuántos workers y réplicas se ejecutan en cada entorno (API, Streamlit, MCP)? | Se revisaron contract_api.py, package.json y el README del módulo. La API utiliza Starlette y un endpoint asíncrono; el README documenta ejecución local con Streamlit y MCP mediante stdio. No se encontró en estos archivos una configuración que confirme el número de workers o réplicas en ejecución. La cantidad real por entorno sigue pendiente de verificar. | sin respuesta |
+| P2 | CON-03 | ¿Qué tráfico de consultas/seg se prevé y cuánto dura cada conexión SQLite? | Se identificó el uso de SQLite como almacenamiento local y operaciones de acceso a datos en el backend. Sin embargo, no se dispone de una estimación confirmada de consultas por segundo ni de mediciones sobre la duración de las conexiones SQLite. Estos valores deberán determinarse mediante pruebas de carga y medición de tiempos. Por tanto, la comprobación permanece pendiente de verificación. | sin respuesta |
+| P3 | CON-04 | ¿Existe un límite concurrente global del LLM o un proxy/cola externo no documentado? | El agente dispone de MAX_PASOS = 6 y existen configuraciones de timeout para las llamadas al LLM. Sin embargo, estos controles no equivalen a un límite global de concurrencia. No se ha confirmado la existencia de un semáforo global, cola compartida o proxy externo que controle las solicitudes simultáneas hacia Ollama. La comprobación requiere revisar la configuración del entorno y realizar pruebas de concurrencia. | sin respuesta |
 
 ## 5. Hallazgos priorizados
 
