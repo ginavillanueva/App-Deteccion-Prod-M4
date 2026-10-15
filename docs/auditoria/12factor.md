@@ -93,7 +93,7 @@
 **Estado:** `NO VERIFICABLE`  
 **Observación:** La presencia de reglas de exclusión no demuestra que el historial esté libre de credenciales. Sin `.git` ni escáner ejecutado no se puede afirmar OK; escanear historial de release/8.0.0 sin copiar valores al informe.  
 **Auditó:** Gina Fabiana Villanueva Viscarra.
-
+**Verificación complementaria (15/10/2026):** Se consultó GitHub Secret Scanning del repositorio App-Deteccion-Prod-M4. La interfaz reportó 0 alertas abiertas y 0 cerradas, con el mensaje «No secrets found». Evidencia: https://github.com/ginavillanueva/App-Deteccion-Prod-M4/security/secret-scanning. Este resultado no sustituye un escaneo independiente y completo del historial de la rama auditada; por ello, F12-02 conserva el estado NO VERIFICABLE.
 
 ### F12-03 · Procesos sin estado (factor VI)
 
