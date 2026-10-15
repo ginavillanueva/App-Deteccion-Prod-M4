@@ -146,9 +146,9 @@
 
 | N.º | Comprobación | Pregunta | Respuesta del grupo | Estado (respondida / sin respuesta) |
 |---|---|---|---|---|
-| P1 | F12-02 | ¿Se ejecutó escaneo de secretos sobre `release/8.0.0` y su historial Git? | No consta en los ZIP; debe confirmarlo el equipo en su entorno Git/despliegue. | sin respuesta |
-| P2 | F12-06 | ¿Existe Dockerfile/CI con imagen inmutable y prueba de SIGTERM para este backend? | No consta en los ZIP; debe confirmarlo el equipo en su entorno Git/despliegue. | sin respuesta |
-| P3 | F12-03 | ¿El prototipo corre solo en una instancia o existe almacenamiento compartido en despliegue? | No consta en los ZIP; debe confirmarlo el equipo en su entorno Git/despliegue. | sin respuesta |
+| P1 | F12-02 | ¿Se ejecutó escaneo de secretos sobre `release/8.0.0` y su historial Git? | Se consultó GitHub Secret Scanning el 15/10/2026: 0 alertas abiertas y 0 cerradas. Evidencia: https://github.com/ginavillanueva/App-Deteccion-Prod-M4/security/secret-scanning. No se confirmó un escaneo independiente del historial Git de release/8.0.0.| sin respuesta |
+| P2 | F12-06 | ¿Existe Dockerfile/CI con imagen inmutable y prueba de SIGTERM para este backend? |Se revisó modulo_bpmn_workflow_engine/.github/workflows/copilot-setup-steps.yml: configura preparación del entorno y declara un paso de construcción, pero no demuestra una imagen Docker inmutable ni una prueba SIGTERM. Las búsquedas de Dockerfile y compose no arrojaron coincidencias. No se verificó el despliegue ni el apagado limpio.| sin respuesta |
+| P3 | F12-03 | ¿El prototipo corre solo en una instancia o existe almacenamiento compartido en despliegue? | No se conoce el número de instancias ni si existe almacenamiento compartido. El README documenta ejecución local con Streamlit, Ollama y SQLite, pero no confirma el despliegue actual. Verificación pendiente.| sin respuesta |
 
 ## 5. Hallazgos priorizados
 
