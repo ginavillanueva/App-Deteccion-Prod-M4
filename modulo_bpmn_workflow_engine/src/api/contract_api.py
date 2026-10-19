@@ -23,6 +23,7 @@ from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 from starlette.routing import Route
+from src.api.vencimientos_api import ruta_vencimientos
 
 from src.langgraph_orchestration.persistent_runtime import (
     ejecutar_persistente,
@@ -256,10 +257,9 @@ routes = [
     Route(
         "/api/v1/deteccion",
         deteccion_endpoint,
-        methods=[
-            "POST",
-        ],
+        methods=["POST"],
     ),
+    ruta_vencimientos,
 ]
 
 
