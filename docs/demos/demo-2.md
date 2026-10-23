@@ -30,3 +30,20 @@ Caso de uso identificado: FSD-UC-001
 - Ejecutar CI en GitHub.
 - Validar integracion grupal en release/8.2.0.
 - Revisar privacidad del catalogo comercial antes de publicar.
+
+
+## Registro individual de funcionalidades — Demo 2
+
+| Integrante | Funcionalidades implementadas | Casos de uso FSD | Repositorio |
+|---|---|---|---|
+| Gina Villanueva Viscarra (participación individual) | FEAT-001: Registro visual de producto crítico; FEAT-002: Supervisión y dashboard gerencial; contribución técnica: OpenAPI y CI | FSD-UC-001; FSD-UC-002 | https://github.com/ginavillanueva/App-Deteccion-Prod-M4/tree/release/8.2.0 |
+
+## Criterios de aceptación vinculados
+
+**FEAT-001 / FSD-UC-001:** registrar tienda, producto, lote, vencimiento, cantidad, precio y acción comercial; calcular vencimiento, valor financiero, descuento y riesgo; mostrar el caso en la bandeja supervisora.
+
+**FEAT-002 / FSD-UC-002:** revisar un caso y su evidencia; aprobarlo con comentario; cambiar su estado a VALIDADO_SUPERVISOR; actualizar los indicadores gerenciales.
+
+**OpenAPI y CI:** contrato generado desde FastAPI, archivo openapi.json versionado, verificación de drift y lint con Spectral mediante .github/workflows/openapi-ci.yml.
+
+**Evidencia:** registro visual, validación supervisora exitosa, dashboard de seis casos (uno validado), ocho pruebas básicas aprobadas y ejecuciones verdes de GitHub Actions.
