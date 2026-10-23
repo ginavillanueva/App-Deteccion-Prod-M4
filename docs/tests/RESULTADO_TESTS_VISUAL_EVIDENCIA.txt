@@ -1,0 +1,4 @@
+Resultado validado:
+50 passed
+Total coverage: 100.00%
+Required test coverage of 90% reached.

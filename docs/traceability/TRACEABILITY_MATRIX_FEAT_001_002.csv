@@ -1,0 +1,7 @@
+trace_id,source_need,feature,fsd_section,design_section,adr,prompt,expected_code,expected_tests,expected_evidence,status
+TR-001,Centralizar registro de productos próximos a vencer,FEAT-001,FSD §3,DD §6,ADR-0007,PR-IMPL-002,web_ui.py register_case.html,test_register_case_from_ui,Captura formulario,PENDING_REVIEW
+TR-002,Controlar precios actuales y modificados,FEAT-001,FSD §3 reglas,DD §8,ADR-0007,PR-IMPL-002,domain/scoring.py use_cases.py,test_price_change_requires_reason,Captura auditoria precio,PENDING_REVIEW
+TR-003,Registrar acciones comerciales aplicadas,FEAT-001,FSD §3,DD §6,ADR-0007,PR-IMPL-002,entities.py events.py,test_events_visible,Captura eventos,PENDING_REVIEW
+TR-004,Supervisor necesita validar datos centralizados,FEAT-002,FSD §4,DD §6,ADR-0007,PR-IMPL-002,supervisor.html validate route,test_supervisor_can_validate_case,Captura bandeja supervisor,PENDING_REVIEW
+TR-005,Gerencia necesita KPIs e impacto financiero,FEAT-002,FSD §4 KPIs,DD §6,ADR-0007,PR-IMPL-002,dashboard.html dashboard use case,test_dashboard_updates_after_validation,Captura dashboard,PENDING_REVIEW
+TR-006,Trazabilidad documental y técnica,FEAT-001-002,FSD §6,DD §12,ADR-0007,PR-IMPL-002,traceability.html,test_traceability_visible,Captura trazabilidad,PENDING_REVIEW

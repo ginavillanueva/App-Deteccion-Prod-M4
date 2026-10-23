@@ -16,3 +16,17 @@ artifacts/
 **/*.pyc
 **/specs/OPE*_ERROR*.txt
 **/specs/OPE*_FALLO*.txt
+﻿.venv/
+*.bak
+.pytest_cache/
+.coverage
+htmlcov/
+# Catálogos comerciales y datos locales
+data/
+*.xlsx
+*.xls
+*.sqlite
+*.sqlite3
+*.db
+# Entorno local
+.env.*

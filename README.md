@@ -1,44 +1,75 @@
-# App-Deteccion-Prod-M4
-Solución digital centrada en el usuario para la detección, trazabilidad y gestión estratégica de productos críticos en retail, integrando control de vencimientos, precios y acciones comerciales.
-## Descripción
+# App Detección Prod — Demo visual trazable de 2 features
 
-App Detección Prod es una solución digital orientada a mejorar la gestión, trazabilidad y control de productos críticos en canal retail, especialmente productos próximos a vencer, productos con baja rotación y productos con acciones comerciales activas.
+Este paquete contiene una demo aplicada para evaluación académica. La app permite demostrar dos features del producto desde interfaz web, no solo desde Swagger.
 
-El proyecto nace a partir de una problemática real detectada en empresas distribuidoras e importadoras que actualmente gestionan estos procesos mediante WhatsApp, fotografías dispersas y reportes no estructurados, generando:
+## Objetivo de la demo
 
-- Falta de trazabilidad.
-- Pérdidas económicas.
-- Baja visibilidad operativa.
-- Errores en descuentos y cambios de precio.
-- Demoras en la toma de decisiones.
-- Ausencia de indicadores estratégicos.
+Mostrar cómo App Detección Prod transforma un proceso operativo disperso en un flujo digital trazable:
 
-## Objetivo del Proyecto
+1. El mercaderista registra un producto crítico desde una interfaz visual.
+2. El sistema calcula riesgo, score, SLA, descuento, valor financiero en riesgo y valor intervenido.
+3. El supervisor valida el caso con decisión y comentario.
+4. Gerencia analiza indicadores mediante dashboard con filtros nacionales, regionales, por canal, cadena, riesgo y acción comercial.
+5. La demo evidencia trazabilidad documental: FSD → DD → ADR → Prompt → Código → Tests.
 
-Transformar un proceso manual, reactivo y fragmentado en una solución digital centralizada, medible y centrada en el usuario, permitiendo conectar operación, supervisión y estrategia comercial en tiempo real.
+## Features incluidas
 
-## Usuarios Principales
+### FEAT-001 — Registro visual del mercaderista
 
-- Mercaderistas
-- Supervisores regionales
-- Vendedores
-- Gerencia comercial
+Pantalla para registrar tienda, producto, lote, vencimiento, cantidad, precio actual, nuevo precio, acción comercial, evidencia y responsable.
 
-## Capacidades Principales del Sistema
+### FEAT-002 — Supervisión + dashboard gerencial avanzado
 
-- Registro de productos críticos.
-- Control de fechas de vencimiento.
-- Gestión de descuentos y promociones.
-- Registro de cambios de precio.
-- Trazabilidad de acciones comerciales.
-- Evidencia fotográfica.
-- Alertas operativas.
-- Dashboards estratégicos.
-- Indicadores financieros y operativos.
-- Seguimiento en tiempo real.
+Incluye bandeja de supervisión, validación del caso y dashboard con KPIs, gráficos, filtros, ranking regional e insights ejecutivos.
 
-  
-## Autor
+## Ejecutar en Windows
 
-Gina Fabiana Villanueva Viscarra
-Maestría en Desarrollo de Productos de Software con IA
+1. Doble clic en `01_CREAR_ENTORNO_E_INSTALAR.bat`.
+2. Doble clic en `02_EJECUTAR_DEMO.bat`.
+3. Abrir en Chrome: `http://127.0.0.1:8000/app`.
+4. Para pruebas: doble clic en `03_EJECUTAR_TESTS.bat`.
+
+## Ejecutar manualmente
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m uvicorn app_deteccion.main:app --app-dir src --reload
+```
+
+Abrir:
+
+```text
+http://127.0.0.1:8000/app
+```
+
+## Tests
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest --cov=src --cov-report=term-missing --cov-fail-under=90
+```
+
+Resultado esperado:
+
+```text
+50 passed
+Total coverage: 100.00%
+```
+
+## Archivos principales
+
+```text
+src/app_deteccion/           Código de la app
+tests/                       Pruebas automatizadas
+docs/product/                FSD/PRD/DTP
+docs/design/                 Design Docs
+docs/adr/                    Decisiones arquitectónicas
+docs/prompts/impl/           Prompts de implementación
+docs/demo/                   Guías de demo
+docs/defensa/                Guion de defensa
+docs/traceability/           Matrices de trazabilidad
+```
+
+## Nota para evaluación
+
+La demo no reemplaza la documentación. La complementa mostrando que las decisiones documentadas fueron llevadas a una interfaz funcional y verificable con tests.

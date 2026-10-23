@@ -1,0 +1,15 @@
+{
+  "name": "App Deteccion Prod - Demo visual con evidencia fotografica",
+  "version": "4.2.0-visual-evidencia-docente",
+  "features": [
+    "FEAT-001 Registro visual mercaderista con evidencia fotografica",
+    "FEAT-002 Supervision + dashboard gerencial con filtros y graficos"
+  ],
+  "traceability": "PRD -> FSD -> DD -> ADR -> Prompt -> Codigo -> Tests -> Demo visual",
+  "tests": {
+    "passed": 50,
+    "coverage": "100.00%",
+    "coverage_rule": ">=90%"
+  },
+  "generated_at": "2026-07-08T21:50:02"
+}

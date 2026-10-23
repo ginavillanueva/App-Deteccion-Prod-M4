@@ -1,0 +1,13 @@
+APP DETECCION PROD - DEMO VISUAL CON EVIDENCIA FOTOGRAFICA
+
+Este paquete permite ejecutar localmente una demo aplicada de dos features:
+1) Registro visual de producto critico desde rol mercaderista.
+2) Bandeja de supervision y dashboard gerencial con filtros, graficos y trazabilidad.
+
+La version incluye evidencia fotografica visible: el mercaderista puede adjuntar una imagen, verla como vista previa, y el supervisor puede revisarla antes de validar el caso.
+
+Orden de ejecucion:
+1. Ejecutar 01_CREAR_ENTORNO_E_INSTALAR.bat
+2. Ejecutar 02_EJECUTAR_DEMO.bat
+3. Abrir http://127.0.0.1:8000/app
+4. Ejecutar 03_EJECUTAR_TESTS.bat para validar cobertura.
