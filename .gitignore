@@ -1,0 +1,19 @@
+﻿.venv/
+__pycache__/
+*.py[cod]
+*.bak
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Catálogos comerciales y datos locales
+data/
+*.xlsx
+*.xls
+*.sqlite
+*.sqlite3
+*.db
+
+# Entorno local
+.env
+.env.*

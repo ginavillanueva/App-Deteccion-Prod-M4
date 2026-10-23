@@ -1,0 +1,480 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "App Detección Prod — FSD-UC-001",
+    "description": "Vertical slice trazable: registro, precio, scoring, eventos y dashboard.",
+    "version": "0.2.0"
+  },
+  "paths": {
+    "/app": {
+      "get": {
+        "tags": [
+          "demo-ui"
+        ],
+        "summary": "Demo App",
+        "description": "Interfaz aplicada para demostrar dos features trazables.\n\nLa UI consume los endpoints existentes de la API. Las reglas de negocio siguen\nviviendo en dominio/aplicación y la capa visual solo presenta el flujo para\nmercaderista, supervisor y gerencia.",
+        "operationId": "demo_app_app_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Root",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Health Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cases": {
+      "get": {
+        "summary": "List Cases",
+        "operationId": "list_cases_cases_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response List Cases Cases Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Register Case",
+        "operationId": "register_case_cases_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterCaseRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Register Case Cases Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cases/{case_id}": {
+      "get": {
+        "summary": "Get Case",
+        "operationId": "get_case_cases__case_id__get",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Get Case Cases  Case Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cases/{case_id}/validate": {
+      "patch": {
+        "summary": "Validate Case",
+        "operationId": "validate_case_cases__case_id__validate_patch",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateCaseRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Validate Case Cases  Case Id  Validate Patch"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard": {
+      "get": {
+        "summary": "Dashboard",
+        "operationId": "dashboard_dashboard_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Dashboard Dashboard Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/events": {
+      "get": {
+        "summary": "Events",
+        "operationId": "events_events_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Events Events Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/traceability": {
+      "get": {
+        "summary": "Traceability",
+        "operationId": "traceability_traceability_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Traceability Traceability Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cases/reset": {
+      "delete": {
+        "summary": "Reset Demo",
+        "operationId": "reset_demo_cases_reset_delete",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Reset Demo Cases Reset Delete"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CommercialAction": {
+        "type": "string",
+        "enum": [
+          "DESCUENTO",
+          "BANDEO",
+          "PROMOCION",
+          "RETIRO",
+          "PENDIENTE"
+        ],
+        "title": "CommercialAction"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "RegisterCaseRequest": {
+        "properties": {
+          "store": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Store"
+          },
+          "product_name": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Product Name"
+          },
+          "batch": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Batch"
+          },
+          "expiration_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Expiration Date"
+          },
+          "quantity": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Quantity"
+          },
+          "current_price": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Current Price"
+          },
+          "new_price": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "New Price"
+          },
+          "commercial_action": {
+            "$ref": "#/components/schemas/CommercialAction"
+          },
+          "price_change_approved": {
+            "type": "boolean",
+            "title": "Price Change Approved",
+            "default": false
+          },
+          "price_change_reason": {
+            "type": "string",
+            "title": "Price Change Reason",
+            "default": ""
+          },
+          "evidence_note": {
+            "type": "string",
+            "title": "Evidence Note",
+            "default": ""
+          },
+          "evidence_photo_name": {
+            "type": "string",
+            "title": "Evidence Photo Name",
+            "default": ""
+          },
+          "evidence_photo_data": {
+            "type": "string",
+            "title": "Evidence Photo Data",
+            "default": ""
+          },
+          "created_by": {
+            "type": "string",
+            "title": "Created By",
+            "default": "mercaderista.demo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "store",
+          "product_name",
+          "batch",
+          "expiration_date",
+          "quantity",
+          "current_price",
+          "commercial_action"
+        ],
+        "title": "RegisterCaseRequest"
+      },
+      "ValidateCaseRequest": {
+        "properties": {
+          "supervisor_user": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Supervisor User"
+          },
+          "decision": {
+            "type": "string",
+            "title": "Decision",
+            "default": "APROBADO"
+          },
+          "comment": {
+            "type": "string",
+            "title": "Comment",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "supervisor_user"
+        ],
+        "title": "ValidateCaseRequest"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

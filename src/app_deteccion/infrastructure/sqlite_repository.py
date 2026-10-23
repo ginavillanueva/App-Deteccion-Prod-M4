@@ -35,13 +35,62 @@ class SQLiteCaseRepository:
                 )
                 """
             )
+            columnas = {
+                row[1] for row in con.execute("PRAGMA table_info(cases)")
+            }
+            nuevas = {
+                "created_at": "TEXT",
+                "store": "TEXT",
+                "risk_level": "TEXT",
+            }
+            for nombre, tipo in nuevas.items():
+                if nombre not in columnas:
+                    con.execute(f"ALTER TABLE cases ADD COLUMN {nombre} {tipo}")
+
+            con.execute(
+                "CREATE INDEX IF NOT EXISTS idx_cases_created_id "
+                "ON cases(created_at DESC, id DESC)"
+            )
             con.commit()
+
+
+    def list_page(self, limit: int = 20, offset: int = 0) -> list[CriticalProductCase]:
+        """Consulta paginada SQL, orden estable e ?ndice compuesto."""
+        if not 1 <= limit <= 100:
+            raise ValueError("limit debe estar entre 1 y 100")
+        if offset < 0:
+            raise ValueError("offset no puede ser negativo")
+
+        with closing(self._connect()) as con:
+            rows = con.execute(
+                "SELECT payload FROM cases "
+                "ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?",
+                (limit, offset),
+            ).fetchall()
+        return [self._from_payload(json.loads(row[0])) for row in rows]
+
+    def explain_page(self, limit: int = 20, offset: int = 0) -> list[str]:
+        """Plan de ejecuci?n real de SQLite."""
+        with closing(self._connect()) as con:
+            rows = con.execute(
+                "EXPLAIN QUERY PLAN SELECT payload FROM cases "
+                "ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?",
+                (limit, offset),
+            ).fetchall()
+        return [str(row[3]) for row in rows]
 
     def add(self, case: CriticalProductCase) -> CriticalProductCase:
         with closing(self._connect()) as con:
             con.execute(
-                "INSERT OR REPLACE INTO cases (id, payload) VALUES (?, ?)",
-                (case.id, json.dumps(case.to_dict(), ensure_ascii=False)),
+                "INSERT OR REPLACE INTO cases "
+                "(id, payload, created_at, store, risk_level) VALUES (?, ?, ?, ?, ?)",
+                (
+                    case.id,
+                    json.dumps(case.to_dict(), ensure_ascii=False),
+                    case.created_at.isoformat(),
+                    case.store,
+                    case.risk_level.value,
+                ),
             )
             con.commit()
         return case
@@ -69,6 +118,7 @@ class SQLiteCaseRepository:
     @staticmethod
     def _from_payload(data: dict) -> CriticalProductCase:
         price = data["price_audit"]
+
         case = CriticalProductCase(
             id=data["id"],
             store=data["store"],
@@ -79,16 +129,26 @@ class SQLiteCaseRepository:
             commercial_action=CommercialAction(data["commercial_action"]),
             price_audit=PriceAudit(
                 current_price=price["current_price"],
-                new_price=price["new_price"],
-                price_change_approved=price["price_change_approved"],
-                price_change_reason=price.get("price_change_reason", ""),
+                new_price=price.get("new_price"),
+                price_change_approved=price.get(
+                    "price_change_approved", False
+                ),
+                price_change_reason=price.get(
+                    "price_change_reason", ""
+                ),
             ),
             evidence_note=data.get("evidence_note", ""),
+            evidence_photo_name=data.get("evidence_photo_name", ""),
+            evidence_photo_data=data.get("evidence_photo_data", ""),
             created_by=data.get("created_by", "mercaderista.demo"),
             created_at=date.fromisoformat(data["created_at"]),
         )
+
         case.status = CaseStatus(data.get("status", "REGISTRADO"))
         case.validated_by = data.get("validated_by")
+        case.supervisor_decision = data.get("supervisor_decision")
+        case.supervisor_comment = data.get("supervisor_comment", "")
+
         return case
 
 

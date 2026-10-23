@@ -17,6 +17,8 @@ from app_deteccion.application.use_cases import (
 from app_deteccion.domain.enums import CommercialAction
 from app_deteccion.domain.exceptions import DomainValidationError
 from app_deteccion.infrastructure.memory import InMemoryCaseRepository, InMemoryEventPublisher
+from app_deteccion.infrastructure.sqlite_repository import SQLiteCaseRepository, SQLiteEventPublisher
+import os
 from app_deteccion.adapters.web_ui import router as demo_ui_router
 
 
@@ -44,8 +46,14 @@ class ValidateCaseRequest(BaseModel):
 
 
 def create_app(repository=None, event_publisher=None) -> FastAPI:
-    repo = repository or InMemoryCaseRepository()
-    publisher = event_publisher or InMemoryEventPublisher()
+    use_sqlite = os.getenv("APP_STORAGE", "sqlite").lower() == "sqlite"
+    db_path = os.getenv("APP_DB_PATH", "app_deteccion_demo.db")
+    repo = repository if repository is not None else (
+        SQLiteCaseRepository(db_path) if use_sqlite else InMemoryCaseRepository()
+    )
+    publisher = event_publisher if event_publisher is not None else (
+        SQLiteEventPublisher(db_path) if use_sqlite else InMemoryEventPublisher()
+    )
 
     app = FastAPI(
         title="App Detección Prod — FSD-UC-001",
