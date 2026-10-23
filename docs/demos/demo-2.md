@@ -1,5 +1,6 @@
 # Demo 2 - App Deteccion Prod
 
+
 Fecha prevista: 26 de octubre de 2026
 Rama de trabajo: demo-2-preparacion
 Release objetivo: release/8.2.0
