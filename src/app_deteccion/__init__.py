@@ -1,0 +1,1 @@
+"""App Detección Prod package."""

@@ -1,0 +1,19 @@
+[project]
+name = "app-deteccion-prod-m5-uc"
+version = "0.2.0"
+description = "Vertical slice trazable para App Deteccion Prod: FSD-UC-001"
+requires-python = ">=3.11"
+dependencies = ["fastapi", "uvicorn", "pydantic"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["*/__init__.py"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 90
