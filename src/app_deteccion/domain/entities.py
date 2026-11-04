@@ -169,16 +169,17 @@ class CriticalProductCase:
     def validate_by_supervisor(self, supervisor_user: str, decision: str = "APROBADO", comment: str = "") -> None:
         self._required("supervisor_user", supervisor_user)
         validate_human_note_is_safe(comment)
-        self.status = CaseStatus.VALIDADO_SUPERVISOR
+        self.status = CaseStatus.APROBADO if decision == "APROBADO" else CaseStatus.VALIDADO_SUPERVISOR
         self.validated_by = supervisor_user
         self.supervisor_decision = decision
         self.supervisor_comment = comment
         self.events.append(
             DomainEvent(
-                name="CaseValidatedBySupervisor.v1",
+                name="CaseValidated.v1",
                 aggregate_id=self.id,
                 payload={
                     "validated_by": supervisor_user,
+                    "supervisor_user": supervisor_user,
                     "decision": decision,
                     "comment": comment,
                     "status": self.status.value,
