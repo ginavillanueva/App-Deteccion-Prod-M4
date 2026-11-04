@@ -185,3 +185,63 @@ Resultados observados:
 Conclusion: se verifico el arranque y la respuesta HTTP desde un clon limpio del release publicado. Docker reutilizo capas en cache, por lo que esta prueba no equivale a una compilacion sin cache.
 
 Esta verificacion no resuelve los 49 hallazgos HIGH de Trivy ni sustituye las pruebas funcionales completas.
+
+## 10. Evidencia funcional de FEAT-001 y FEAT-002 - 04/11/2026
+
+Se ejecuto una prueba funcional mediante la API del stack Docker.
+
+### FEAT-001 - Registro de producto
+
+Caso de prueba:
+- Producto: Yogur Natural 1L.
+- Tienda: Sucursal Demo.
+- Lote: LOTE-DEMO-001.
+- Vencimiento: 08/11/2026.
+- Cantidad: 20 unidades.
+- Precio actual: 15.
+- Nuevo precio: 12.
+- Accion comercial: DESCUENTO.
+
+Resultados observados:
+- Registro exitoso.
+- Dias al vencimiento: 4.
+- Valor financiero en riesgo: 300.
+- Descuento: 20 %.
+- Clasificacion de riesgo: MEDIO, score 35.
+- Estado inicial: REGISTRADO.
+- Eventos generados: ProductCaseRegistered.v1, PriceChanged.v1 y CaseRiskClassified.v1.
+
+### FEAT-002 - Validacion del supervisor
+
+Se aprobo el caso utilizando PATCH /cases/{case_id}/validate.
+
+Resultados observados:
+- Decision: APROBADO.
+- Estado interno: VALIDADO_SUPERVISOR.
+- Supervisor: supervisor.demo.
+- Comentario de aprobacion almacenado.
+- Evento generado: CaseValidatedBySupervisor.v1.
+
+### Dashboard y persistencia
+
+Resultados confirmados mediante GET /dashboard, GET /events y GET /cases/{case_id}:
+- total_cases: 1.
+- validated_cases: 1.
+- total_financial_value_at_risk: 300.
+- total_intervened_quantity: 20.
+- price_change_cases: 1.
+- domain_events_count: 4.
+- Caso recuperado correctamente con su estado y decision del supervisor.
+
+### Diferencias encontradas respecto al FSD
+
+1. El FSD menciona el estado APROBADO; la implementacion utiliza VALIDADO_SUPERVISOR y conserva APROBADO en supervisor_decision.
+2. El FSD menciona CaseValidated.v1; la implementacion genera CaseValidatedBySupervisor.v1.
+
+Estas diferencias requieren alineacion del contrato funcional o una decision de diseno documentada.
+
+### Alcance de la prueba
+
+Se comprobo un flujo funcional de registro, aprobacion, consulta de eventos y dashboard.
+No se afirma cobertura completa de todos los escenarios Gherkin ni de casos negativos.
+Los hallazgos HIGH de Trivy siguen pendientes de tratamiento.
