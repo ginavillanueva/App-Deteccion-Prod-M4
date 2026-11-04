@@ -245,3 +245,43 @@ Estas diferencias requieren alineacion del contrato funcional o una decision de 
 Se comprobo un flujo funcional de registro, aprobacion, consulta de eventos y dashboard.
 No se afirma cobertura completa de todos los escenarios Gherkin ni de casos negativos.
 Los hallazgos HIGH de Trivy siguen pendientes de tratamiento.
+
+## 11. Mejora de seguridad del Dockerfile - 04/11/2026
+
+Se actualizaron y fijaron versiones de dependencias Python en las
+etapas builder y runtime del Dockerfile multi-stage.
+
+Versiones utilizadas:
+- setuptools==84.2.1
+- wheel==0.48.0
+
+Se identificaron dependencias vulnerables incorporadas en setuptools/_vendor.
+La actualizacion elimino las detecciones HIGH de Python.
+
+### Comparacion de Trivy
+
+| Categoria | Antes | Despues |
+|---|---:|---:|
+| Python HIGH | 4 | 0 |
+| Debian HIGH | 45 | 45 |
+| Total HIGH | 49 | 45 |
+| Total CRITICAL | 0 | 0 |
+
+Herramienta: Trivy v0.76.1.
+
+### Validaciones posteriores
+
+- Construccion Docker sin cache: exitosa.
+- Contenedor Docker Compose: healthy.
+- GET /health: HTTP 200 OK.
+- Hadolint v2.15.1: sin advertencias.
+
+### Riesgos pendientes
+
+Permanecen 45 hallazgos HIGH asociados a Debian 13.7.
+No se consideran corregidos ni justificados individualmente.
+Se requiere revisar sus identificadores CVE, exposicion real,
+medidas de mitigacion y actualizaciones disponibles.
+
+La mejora documentada corresponde a la rama release/8.3.0
+posterior a la publicacion inicial del tag 8.3.0.
