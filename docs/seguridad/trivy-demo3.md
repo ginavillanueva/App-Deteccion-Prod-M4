@@ -98,3 +98,16 @@ Decision: conservar temporalmente python:3.11-slim, basada en Debian 13.
 Justificacion: la alternativa presenta dos hallazgos CRITICAL. Ademas, los resultados comparan una imagen base con una imagen de aplicacion, por lo que no constituyen una evaluacion equivalente de ambos despliegues.
 
 Los 45 hallazgos HIGH restantes en la imagen actual continuan pendientes de evaluacion y tratamiento.
+
+## Comprobacion de actualizaciones Debian - 04/11/2026
+
+Se ejecuto apt-get update y apt list --upgradable
+sobre la imagen app-deteccion:8.3.0.
+
+Resultado: solamente tzdata tenia una actualizacion disponible:
+2026e-0+deb13u1 -> 2026f-0+deb13u1.
+
+No se identificaron otras actualizaciones disponibles en esta consulta.
+
+Esta comprobacion no elimina ni justifica los 45 hallazgos HIGH
+pendientes. Se requiere su evaluacion individual.
