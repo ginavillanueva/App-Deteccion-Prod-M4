@@ -285,3 +285,35 @@ medidas de mitigacion y actualizaciones disponibles.
 
 La mejora documentada corresponde a la rama release/8.3.0
 posterior a la publicacion inicial del tag 8.3.0.
+
+## Validacion final FSD - 04/11/2026
+
+Se corrigio la implementacion de aprobacion del supervisor
+para alinearla con los criterios de aceptacion del FSD.
+
+### Correcciones
+
+- Estado de aprobacion: APROBADO.
+- Evento generado: CaseValidated.v1.
+- Campo del evento: supervisor_user.
+
+### Prueba funcional real
+
+Se registro un caso mediante POST /cases y se aprobo
+mediante PATCH /cases/{id}/validate.
+
+Resultados:
+- Estado final: APROBADO.
+- Decision del supervisor: APROBADO.
+- Evento CaseValidated.v1: verificado.
+- Supervisor: supervisor.demo.
+- Dashboard validated_cases: 1.
+- Dashboard domain_events_count: 4.
+- API ejecutada en Docker Compose con contenedor Healthy.
+
+Resultado: PASA para la ruta de aprobacion probada.
+
+Commit de implementacion: 253f533.
+
+Las decisiones de rechazo y observacion no forman
+parte de esta prueba especifica.
