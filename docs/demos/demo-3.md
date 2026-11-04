@@ -161,3 +161,27 @@ Pendiente:
 ## 8. Conclusion
 
 El despliegue local de la API mediante Docker Compose se verifico satisfactoriamente. Se identificaron dos funcionalidades trazables al FSD y se documento una propuesta de separacion del modulo de eventos. La aceptacion funcional completa y el cierre de seguridad permanecen pendientes de verificacion.
+
+## 9. Verificacion desde clon limpio - 04/11/2026
+
+Se realizo una nueva descarga del repositorio desde GitHub utilizando la etiqueta 8.3.0.
+
+Comando de clonacion:
+
+    git clone --depth 1 --branch 8.3.0 --single-branch https://github.com/ginavillanueva/App-Deteccion-Prod-M4.git App-Deteccion-Demo3-Limpio
+
+Commit verificado: 4dac875.
+
+Desde la carpeta clonada se ejecuto:
+
+    docker compose up -d --build --wait
+
+Resultados observados:
+- Imagen app-deteccion:8.3.0 construida correctamente.
+- Contenedor app-deteccion-demo3-limpio-api-1 en estado healthy.
+- GET http://localhost:18080/health: HTTP 200 OK.
+- Respuesta JSON: {"status":"ok","feature":"FSD-UC-001","coverage_rule":">=90%"}.
+
+Conclusion: se verifico el arranque y la respuesta HTTP desde un clon limpio del release publicado. Docker reutilizo capas en cache, por lo que esta prueba no equivale a una compilacion sin cache.
+
+Esta verificacion no resuelve los 49 hallazgos HIGH de Trivy ni sustituye las pruebas funcionales completas.
