@@ -78,3 +78,23 @@ La ausencia de FixedVersion no demuestra ausencia de riesgo.
 | CVE-2026-78408 | util-linux | 2.41.5-0+deb13u1 | affected |  |
 | CVE-2026-78409 | util-linux | 2.41.5-0+deb13u1 | affected |  |
 | CVE-2026-78410 | util-linux | 2.41.5-0+deb13u1 | affected |  |
+
+## Evaluacion de imagen base alternativa
+
+Se analizo python:3.11-slim-bookworm (Debian 12.15) con Trivy 0.76.1.
+
+Resultados de la imagen base alternativa:
+- HIGH del sistema operativo: 36.
+- HIGH de Python: 2.
+- Total HIGH: 38.
+- CRITICAL: 2.
+
+La imagen actual de la aplicacion, basada en Debian 13.7, presento:
+- HIGH: 45.
+- CRITICAL: 0.
+
+Decision: conservar temporalmente python:3.11-slim, basada en Debian 13.
+
+Justificacion: la alternativa presenta dos hallazgos CRITICAL. Ademas, los resultados comparan una imagen base con una imagen de aplicacion, por lo que no constituyen una evaluacion equivalente de ambos despliegues.
+
+Los 45 hallazgos HIGH restantes en la imagen actual continuan pendientes de evaluacion y tratamiento.
