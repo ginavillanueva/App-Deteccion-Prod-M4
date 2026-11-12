@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from opentelemetry import trace
+
 from dataclasses import dataclass
 from datetime import date
 from typing import Optional
@@ -79,49 +81,52 @@ class DashboardQuery:
         self.event_publisher = event_publisher
 
     def execute(self) -> dict:
-        cases = self.repository.list_all()
-        total_cases = len(cases)
-        high_risk_cases = sum(1 for c in cases if c.risk_level == RiskLevel.ALTO)
-        medium_risk_cases = sum(1 for c in cases if c.risk_level == RiskLevel.MEDIO)
-        low_risk_cases = sum(1 for c in cases if c.risk_level == RiskLevel.BAJO)
-        total_financial_value_at_risk = round(sum(c.financial_value_at_risk for c in cases), 2)
-        total_intervened_quantity = sum(c.quantity for c in cases)
-        price_change_cases = sum(1 for c in cases if c.price_audit.has_price_change)
-        unapproved_price_change_cases = sum(
-            1 for c in cases if c.price_audit.has_price_change and not c.price_audit.price_change_approved
-        )
-        total_intervened_value = round(sum(c.intervened_value for c in cases), 2)
-        pending_action_cases = sum(1 for c in cases if c.commercial_action == CommercialAction.PENDIENTE)
-        validated_cases = sum(1 for c in cases if c.validated_by)
-        avg_discount_percent = 0.0
-        if price_change_cases:
-            avg_discount_percent = round(
-                sum(c.price_audit.discount_percent for c in cases if c.price_audit.has_price_change)
-                / price_change_cases,
-                2,
+        tracer = trace.get_tracer("app_deteccion.dashboard")
+        with tracer.start_as_current_span("dashboard.sqlite.list_all"):
+            cases = self.repository.list_all()
+        with tracer.start_as_current_span("dashboard.calculate_metrics"):
+            total_cases = len(cases)
+            high_risk_cases = sum(1 for c in cases if c.risk_level == RiskLevel.ALTO)
+            medium_risk_cases = sum(1 for c in cases if c.risk_level == RiskLevel.MEDIO)
+            low_risk_cases = sum(1 for c in cases if c.risk_level == RiskLevel.BAJO)
+            total_financial_value_at_risk = round(sum(c.financial_value_at_risk for c in cases), 2)
+            total_intervened_quantity = sum(c.quantity for c in cases)
+            price_change_cases = sum(1 for c in cases if c.price_audit.has_price_change)
+            unapproved_price_change_cases = sum(
+                1 for c in cases if c.price_audit.has_price_change and not c.price_audit.price_change_approved
             )
-        actions = {action.value: 0 for action in CommercialAction}
-        for case in cases:
-            actions[case.commercial_action.value] += 1
-        return {
-            "fsd_uc": "FSD-UC-001",
-            "features": ["FEAT-001", "FEAT-002"],
-            "fsd_uc_002": "FSD-UC-002",
-            "total_cases": total_cases,
-            "high_risk_cases": high_risk_cases,
-            "medium_risk_cases": medium_risk_cases,
-            "low_risk_cases": low_risk_cases,
-            "pending_action_cases": pending_action_cases,
-            "validated_cases": validated_cases,
-            "total_financial_value_at_risk": total_financial_value_at_risk,
-            "total_intervened_quantity": total_intervened_quantity,
-            "price_change_cases": price_change_cases,
-            "unapproved_price_change_cases": unapproved_price_change_cases,
-            "total_intervened_value": total_intervened_value,
-            "average_discount_percent": avg_discount_percent,
-            "cases_by_action": actions,
-            "domain_events_count": len(self.event_publisher.list_all()),
-        }
+            total_intervened_value = round(sum(c.intervened_value for c in cases), 2)
+            pending_action_cases = sum(1 for c in cases if c.commercial_action == CommercialAction.PENDIENTE)
+            validated_cases = sum(1 for c in cases if c.validated_by)
+            avg_discount_percent = 0.0
+            if price_change_cases:
+                avg_discount_percent = round(
+                    sum(c.price_audit.discount_percent for c in cases if c.price_audit.has_price_change)
+                    / price_change_cases,
+                    2,
+                )
+            actions = {action.value: 0 for action in CommercialAction}
+            for case in cases:
+                actions[case.commercial_action.value] += 1
+            return {
+                "fsd_uc": "FSD-UC-001",
+                "features": ["FEAT-001", "FEAT-002"],
+                "fsd_uc_002": "FSD-UC-002",
+                "total_cases": total_cases,
+                "high_risk_cases": high_risk_cases,
+                "medium_risk_cases": medium_risk_cases,
+                "low_risk_cases": low_risk_cases,
+                "pending_action_cases": pending_action_cases,
+                "validated_cases": validated_cases,
+                "total_financial_value_at_risk": total_financial_value_at_risk,
+                "total_intervened_quantity": total_intervened_quantity,
+                "price_change_cases": price_change_cases,
+                "unapproved_price_change_cases": unapproved_price_change_cases,
+                "total_intervened_value": total_intervened_value,
+                "average_discount_percent": avg_discount_percent,
+                "cases_by_action": actions,
+                "domain_events_count": len(self.event_publisher.list_all()),
+            }
 
 
 class TraceabilityQuery:

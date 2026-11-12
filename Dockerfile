@@ -1,4 +1,4 @@
-﻿# Etapa 1: instalacion de dependencias
+# Etapa 1: instalacion de dependencias
 FROM python:3.11-slim AS builder
 
 WORKDIR /build
@@ -10,7 +10,11 @@ ENV PATH="/opt/venv/bin:$PATH"
 RUN pip install --no-cache-dir --upgrade setuptools==84.2.1 wheel==0.48.0 && pip install --no-cache-dir \
     "fastapi>=0.110,<1.0" \
     "uvicorn[standard]>=0.29,<1.0" \
-    "pydantic>=2.0,<3.0"
+    "pydantic>=2.0,<3.0" \
+    "opentelemetry-api==1.45.2" \
+    "opentelemetry-sdk==1.45.2" \
+    "opentelemetry-instrumentation-fastapi==0.66b2" \
+    "opentelemetry-exporter-otlp-proto-http==1.45.2"
 
 # Etapa 2: imagen de ejecucion
 FROM python:3.11-slim AS runtime
