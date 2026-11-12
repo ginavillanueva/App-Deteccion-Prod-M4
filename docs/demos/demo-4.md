@@ -121,3 +121,25 @@ Servicios:
 5. SQLite fue el tramo interno medido mas costoso de la traza seleccionada.
 6. Los resultados no representan una garantia de rendimiento para cargas mayores.
 7. La validacion del workflow en GitHub y la publicacion del release se verificaran al completar la entrega.
+
+## Actualizacion visual posterior al release inicial
+
+Se verifico localmente la mejora de la interfaz web:
+- Modernizacion de formularios, tarjetas, tablas y navegacion.
+- Flujograma de registro, clasificacion, supervision y gerencia.
+- Guia interactiva de exposicion.
+- Confirmacion visible al actualizar el dashboard.
+- Carga de cartera demo sin duplicar casos.
+
+Prueba funcional visual:
+- Registro de producto con evidencia fotografica.
+- Aprobacion supervisora con estado APROBADO.
+- Actualizacion del dashboard.
+- Resultado observado: 11 casos, 2 validados y 9 pendientes.
+- Valor financiero en riesgo observado: Bs 15.507.
+
+Estos valores corresponden a datos locales de demostracion,
+no a una medicion general de produccion.
+
+Las mejoras se incorporaron a la rama release/8.4.0
+despues de la creacion del tag original 8.4.0.

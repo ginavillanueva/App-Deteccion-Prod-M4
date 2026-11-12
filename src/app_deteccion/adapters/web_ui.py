@@ -137,6 +137,208 @@ def demo_app() -> str:
     .avatar { width: 58px; height: 58px; border-radius: 18px; display: grid; place-items: center; background: #eef4ff; font-size: 30px; }
     @media (max-width: 800px) { .flow { grid-template-columns: 1fr; } }
   </style>
+
+<style>
+.card {
+  border-radius:18px;
+  box-shadow:0 6px 22px rgba(15,35,75,.07);
+}
+button {
+  transition:transform .15s ease,box-shadow .15s ease;
+}
+button:hover:not(:disabled) {
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(15,35,75,.13);
+}
+button:disabled {
+  opacity:.65;
+  cursor:wait;
+}
+input:focus,select:focus,textarea:focus {
+  outline:2px solid #76a9fa;
+  outline-offset:1px;
+}
+</style>
+
+<style id="demo4-modern-theme">
+:root {
+  --demo-blue: #175cd3;
+  --demo-navy: #102b50;
+  --demo-border: #dce5f1;
+  --demo-shadow: 0 8px 28px rgba(15, 35, 75, .075);
+}
+
+/* Superficies y tarjetas */
+body {
+  background: #f3f6fb;
+}
+.card {
+  background: #fff;
+  border: 1px solid var(--demo-border);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: var(--demo-shadow);
+}
+.card h2 {
+  color: var(--demo-navy);
+  font-size: clamp(20px, 2vw, 25px);
+  letter-spacing: -.4px;
+  margin-bottom: 14px;
+}
+.card h3 {
+  color: #183b68;
+  letter-spacing: -.2px;
+}
+.card p, .card .note {
+  line-height: 1.65;
+}
+
+/* Formularios */
+input:not([type=checkbox]):not([type=radio]),
+select, textarea {
+  border: 1px solid #cbd7e6;
+  border-radius: 12px;
+  background: #fbfdff;
+  padding: 12px 13px;
+  max-width: 100%;
+  transition: border-color .2s, box-shadow .2s;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: #438af0;
+  box-shadow: 0 0 0 3px rgba(23,92,211,.12);
+  outline: none;
+}
+label {
+  font-weight: 650;
+  color: #45556b;
+}
+
+/* Botones */
+button {
+  border-radius: 12px;
+  font-weight: 700;
+  transition: transform .18s, box-shadow .18s;
+}
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 15px rgba(23,92,211,.14);
+}
+button:focus-visible, summary:focus-visible {
+  outline: 3px solid #80b3fa;
+  outline-offset: 3px;
+}
+
+/* Indicadores */
+#metricsGrid > * {
+  border-radius: 17px;
+  border: 1px solid #d9e4f2;
+  box-shadow: 0 4px 14px rgba(15,35,75,.055);
+}
+
+/* Tablas y listas */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+th {
+  background: #eaf2ff;
+  color: #214c89;
+  font-weight: 800;
+  padding: 13px;
+}
+td {
+  padding: 12px;
+  border-bottom: 1px solid #e8edf5;
+}
+tr:hover td {
+  background: #f5f9ff;
+}
+.case-item {
+  border-radius: 14px;
+  transition: box-shadow .2s, transform .2s;
+}
+.case-item:hover {
+  box-shadow: 0 5px 17px rgba(15,35,75,.10);
+}
+
+/* Graficos */
+.chart {
+  overflow: hidden;
+}
+.chart h3 {
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e9eff7;
+}
+
+/* Guia flotante */
+.demo4-guide {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 9999;
+  width: min(380px, calc(100vw - 36px));
+  max-height: calc(100vh - 40px);
+  font-family: inherit;
+  color: #192e4a;
+}
+.demo4-guide summary {
+  cursor: pointer;
+  list-style: none;
+  background: linear-gradient(110deg,#155ac8,#10345e);
+  color: white;
+  padding: 15px 19px;
+  border-radius: 16px;
+  box-shadow: 0 9px 25px rgba(20,65,125,.25);
+  font-size: 14px;
+  font-weight: 800;
+}
+.demo4-guide summary::-webkit-details-marker {
+  display: none;
+}
+.demo4-guide[open] {
+  background: white;
+  border-radius: 17px;
+  box-shadow: 0 14px 45px rgba(15,35,75,.23);
+  border: 1px solid #dce5f1;
+  overflow-y: auto;
+}
+.demo4-guide[open] summary {
+  border-radius: 16px 16px 0 0;
+}
+.demo4-guide-content {
+  padding: 17px 20px 20px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.demo4-guide-content h3 {
+  font-size: 17px;
+  margin: 0 0 10px;
+  color: #123d78;
+}
+.demo4-guide-content ol {
+  margin: 7px 0 12px;
+  padding-left: 22px;
+}
+.demo4-guide-content li {
+  margin-bottom: 9px;
+}
+.demo4-guide-content a {
+  color: #155ac8;
+  font-weight: 700;
+}
+.demo4-guide-note {
+  background: #edf5ff;
+  border-radius: 11px;
+  padding: 11px;
+  margin-top: 10px;
+}
+@media(max-width:700px) {
+  .card {padding: 16px; border-radius: 15px}
+  .demo4-guide {right: 10px; bottom: 10px}
+}
+</style>
+
 </head>
 <body>
   <header>
@@ -269,10 +471,189 @@ def demo_app() -> str:
             <div><label>Riesgo</label><select id="filterRisk"><option value="TODOS">Todos</option><option>ALTO</option><option>MEDIO</option><option>BAJO</option></select></div>
             <div><label>Acción</label><select id="filterAction"><option value="TODOS">Todas</option><option>DESCUENTO</option><option>BANDEO</option><option>PROMOCION</option><option>RETIRO</option><option>PENDIENTE</option></select></div>
           </div>
-          <button class="secondary" onclick="refreshAll()">Actualizar dashboard</button>
+          <button class="secondary" onclick="refreshDashboardFromButton()">Actualizar dashboard</button>
           <button class="ghost" id="portfolioBtnDashboard">Cargar cartera nacional demo</button>
+<div id="dashboardTopStatus" role="status" aria-live="polite">Listo para actualizar o cargar la cartera de demostraci&oacute;n.</div>
         </div>
-        <div class="span-12 grid" id="metricsGrid"></div>
+
+
+
+<style>
+.demo-flow-title {
+  font-size: 25px;
+  font-weight: 800;
+  color: #123d78;
+}
+.demo-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 22px 0;
+}
+.demo-step {
+  flex: 1 1 160px;
+  min-height: 175px;
+  padding: 20px 14px;
+  background: linear-gradient(145deg,#f8fbff,#eaf2ff);
+  border: 1px solid #c9daf7;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 5px 16px rgba(18,61,120,.09);
+}
+.demo-step.green {
+  background: linear-gradient(145deg,#f0fdf4,#d1fae5);
+  border-color: #86efac;
+}
+.demo-step.gold {
+  background: linear-gradient(145deg,#fffbeb,#fef3c7);
+  border-color: #fcd34d;
+}
+.demo-number {
+  display: inline-flex;
+  width: 49px;
+  height: 49px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #175cd3;
+  color: white;
+  font-size: 23px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+.demo-step.green .demo-number {background:#087f5b}
+.demo-step.gold .demo-number {background:#b45309}
+.demo-step strong {
+  display: block;
+  color: #102a56;
+  font-size: 16px;
+}
+.demo-step p {
+  color: #475467;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-top: 9px;
+}
+.demo-arrow {
+  color:#175cd3;
+  font-size:27px;
+  font-weight:900;
+}
+.demo-kpis {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+  margin-top:16px;
+}
+.demo-kpi {
+  padding:20px;
+  border-radius:16px;
+  background:linear-gradient(145deg,#eff6ff,#dbeafe);
+  text-align:center;
+  border:1px solid #bfdbfe;
+}
+.demo-kpi b {
+  display:block;
+  color:#1447a6;
+  font-size:28px;
+  margin-bottom:5px;
+}
+.demo-kpi span {color:#475467;font-size:13px}
+#dashboardTopStatus {
+  margin-top:12px;
+  padding:13px 16px;
+  border-radius:12px;
+  background:#edf7ff;
+  border:1px solid #bddcff;
+  color:#123d78;
+  font-weight:600;
+}
+#dashboardTopStatus.ok {
+  background:#dcfce7;
+  border-color:#86efac;
+  color:#166534;
+}
+#dashboardTopStatus.error {
+  background:#fee2e2;
+  border-color:#fca5a5;
+  color:#991b1b;
+}
+@media(max-width:850px) {
+  .demo-arrow {display:none}
+  .demo-kpis {grid-template-columns:1fr}
+}
+</style>
+
+<div class="card span-12">
+  <div class="demo-flow-title">
+    Flujo integral de detecci&oacute;n y gesti&oacute;n
+  </div>
+  <p class="note">
+    Del producto pr&oacute;ximo a vencer a una decisi&oacute;n comercial.
+  </p>
+
+  <div class="demo-flow">
+    <div class="demo-step">
+      <div class="demo-number">1</div>
+      <strong>Registro</strong>
+      <p>El mercaderista registra el producto, lote,
+      vencimiento y evidencia.</p>
+    </div>
+    <div class="demo-arrow">&#10132;</div>
+    <div class="demo-step gold">
+      <div class="demo-number">2</div>
+      <strong>Clasificaci&oacute;n</strong>
+      <p>El sistema calcula riesgo, prioridad
+      e impacto financiero.</p>
+    </div>
+    <div class="demo-arrow">&#10132;</div>
+    <div class="demo-step green">
+      <div class="demo-number">3</div>
+      <strong>Supervisi&oacute;n</strong>
+      <p>El supervisor revisa, aprueba
+      y deja trazabilidad.</p>
+    </div>
+    <div class="demo-arrow">&#10132;</div>
+    <div class="demo-step">
+      <div class="demo-number">4</div>
+      <strong>Gerencia</strong>
+      <p>El dashboard presenta indicadores
+      para tomar decisiones.</p>
+    </div>
+  </div>
+
+  <h3>Resultados t&eacute;cnicos de la Demo 4</h3>
+
+  <div class="demo-kpis">
+    <div class="demo-kpi">
+      <b>10,77 ms</b>
+      <span>p95 final de k6</span>
+    </div>
+    <div class="demo-kpi">
+      <b>0 %</b>
+      <span>Errores HTTP en la prueba</span>
+    </div>
+    <div class="demo-kpi">
+      <b>5 spans</b>
+      <span>Traza analizada con OpenTelemetry</span>
+    </div>
+  </div>
+
+  <p class="note" style="margin-top:14px">
+    Resultados documentados de la prueba, no m&eacute;tricas en vivo.
+    Release 8.4.0.
+  </p>
+</div>
+
+<div class="card span-12">
+  <h3>Estado de las operaciones del dashboard</h3>
+  <div id="dashboardActionStatus" class="status">
+    Listo para actualizar indicadores o cargar datos de demostraci?n.
+  </div>
+</div>
+
+<div class="span-12 grid" id="metricsGrid"></div>
         <div class="card span-6 chart"><h3>Riesgo por nivel</h3><div id="riskChart"></div></div>
         <div class="card span-6 chart"><h3>Valor financiero por región</h3><div id="regionChart"></div></div>
         <div class="card span-6 chart"><h3>Acciones comerciales</h3><div id="actionChart"></div></div>
@@ -623,6 +1004,36 @@ async function refreshEvents() {
 }
 async function refreshAll() { try { await Promise.all([refreshCases(), refreshDashboard(), refreshEvents()]); } catch (e) { console.error(e); } }
 
+
+
+function setDashboardNotice(message, kind='') {
+  setStatus('dashboardActionStatus', message, kind);
+  const top = document.getElementById('dashboardTopStatus');
+  if (top) {
+    top.textContent = message;
+    top.className = kind;
+  }
+}
+
+async function refreshDashboardFromButton() {
+  try {
+    await Promise.all([
+      refreshCases(),
+      refreshDashboard(),
+      refreshEvents()
+    ]);
+    setStatus(
+      'dashboardActionStatus',
+      'Dashboard actualizado correctamente con los datos actuales.',
+      'ok'
+    );
+  } catch (e) {
+    console.error(e);
+    setDashboardNotice(
+              'No se pudo actualizar: ' + e.message, 'error');
+  }
+}
+
 async function registerPayload(payload) {
   const result = await api('/cases', { method: 'POST', body: JSON.stringify(payload) });
   selectedCaseId = result.case.id;
@@ -782,17 +1193,40 @@ const portfolio = [
   }
 ]
 ];
+
 async function seedPortfolio() {
-  const existentes = (await api('/cases')).cases;
-  let agregados = 0;
-  for (const p of portfolio) {
-    if (existentes.some(c => c.batch === p.batch)) continue;
-    await registerPayload(p);
-    agregados++;
+  const boton = document.getElementById('portfolioBtnDashboard');
+  boton.disabled = true;
+
+  try {
+    const existentes = (await api('/cases')).cases;
+    const lotes = new Set(existentes.map(c => c.batch));
+    let agregados = 0;
+
+    for (const p of portfolio) {
+      if (lotes.has(p.batch)) continue;
+      await registerPayload(p);
+      lotes.add(p.batch);
+      agregados++;
+    }
+
+    const mensaje = agregados
+      ? `Cartera cargada: ${agregados} casos nuevos.`
+      : 'La cartera demo ya estaba cargada. No se duplicaron casos.';
+
+    setStatus('homeStatus', mensaje, 'ok');
+    setDashboardNotice( mensaje, 'ok');
+
+    await refreshAll();
+  } catch (e) {
+    console.error(e);
+    setDashboardNotice(
+              'Error al cargar cartera: ' + e.message, 'error');
+  } finally {
+    boton.disabled = false;
   }
-  setStatus('homeStatus', `Cartera demo: ${agregados} casos nuevos. Se conservaron los anteriores.`, 'ok');
-  await refreshAll();
 }
+
 document.getElementById('portfolioBtn').addEventListener('click', seedPortfolio);
 document.getElementById('portfolioBtnDashboard').addEventListener('click', seedPortfolio);
 
@@ -800,6 +1234,63 @@ for (const id of ['filterScope','filterRegion','filterChannel','filterChain','fi
 
 refreshAll();
 </script>
+
+<details class="demo4-guide">
+  <summary>GU&Iacute;A DE LA DEMO 4 &nbsp; | &nbsp; Abrir / cerrar</summary>
+  <div class="demo4-guide-content">
+    <h3>Recorrido de demostraci&oacute;n</h3>
+
+    <ol>
+      <li><b>Inicio:</b> explica el problema de productos
+      pr&oacute;ximos a vencer y el flujo operativo.</li>
+
+      <li><b>Mercaderista:</b> registra un producto,
+      su lote, vencimiento, cantidad, precio y evidencia.
+      Muestra el resultado calculado.</li>
+
+      <li><b>Supervisor:</b> selecciona el caso y registra
+      una decisi&oacute;n con comentario.
+      Comprueba el estado de aprobaci&oacute;n.</li>
+
+      <li><b>Gerencia:</b> muestra indicadores,
+      filtra por riesgo o regi&oacute;n y compara resultados.
+      El bot&oacute;n Actualizar vuelve a consultar datos.</li>
+
+      <li><b>Eventos:</b> explica el registro de eventos
+      y la trazabilidad de las decisiones.</li>
+    </ol>
+
+    <h3>Evidencia t&eacute;cnica</h3>
+    <p><b>k6:</b> 151 solicitudes, p95 de 10,77 ms,
+    0 % de errores HTTP.</p>
+    <p><b>OpenTelemetry:</b> traza de 3,26 ms,
+    con cinco spans medidos en Tempo.</p>
+
+    <div class="demo4-guide-note">
+      Los resultados de k6 son de una prueba anterior
+      documentada; no se actualizan en tiempo real.
+    </div>
+
+    <p>
+      <a href="http://localhost:3300/explore"
+         target="_blank" rel="noopener">
+         Abrir Grafana Tempo
+      </a>
+    </p>
+    <p>
+      <a href="/docs" target="_blank" rel="noopener">
+         Abrir API / Swagger
+      </a>
+    </p>
+    <p>
+      <a href="https://github.com/ginavillanueva/App-Deteccion-Prod-M4/releases/tag/8.4.0"
+         target="_blank" rel="noopener">
+         Consultar release oficial
+      </a>
+    </p>
+  </div>
+</details>
+
 </body>
 </html>
 """
